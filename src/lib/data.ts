@@ -58,3 +58,14 @@ export const members = [
     image: prokop,
   },
 ];
+
+
+export const events = [
+  { title: "Anděl Music Bar", date: "30.5.2026", location: "Plzeň" },
+  { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
+  { title: "Svatba", date: "20.6.2026", location: "Strakonice" },
+  { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
+  { title: "Svatba", date: "8.8.2026", location: "Sušice" },
+  { title: "Svatba", date: "8.8.2026", location: "Sušice", poster: "/4.PNG" },
+  
+];
