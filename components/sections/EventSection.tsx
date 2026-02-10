@@ -1,6 +1,11 @@
 import { events } from "@/lib/data"; // Import the data
 import EventCard from "@/components/ui/EventCard"; // Import the look
 
+
+/**
+ * TODO
+ * @returns 
+ */
 export default function EventsSection() {
   return (
     <section id="Akce" className="py-20 text-center bg-black z-100">
