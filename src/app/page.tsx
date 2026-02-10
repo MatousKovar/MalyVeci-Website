@@ -290,7 +290,20 @@ export default function Home() {
             <span className="text-[#D90000]">KCE</span>
           </h2>
           <div className="max-w-4xl mx-auto mx-10 grid md:grid-cols-2 gap-8 px-4">
-
+            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
+              <h3 className="text-xl font-semibold mb-2 text-red-600">
+                Soukromá akce
+              </h3>
+              <p className="text-gray-300 mb-2">Datum: 21.3.2026</p>
+              <p className="text-gray-400">Horažďovice U Hlaváčků</p>
+            </div>
+            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
+              <h3 className="text-xl font-semibold mb-2 text-red-600">
+                Velikonoční Houba
+              </h3>
+              <p className="text-gray-300 mb-2">Datum: 4.4.2026</p>
+              <p className="text-gray-400">MC Houba Horažďovice</p>
+            </div>
             <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
               <h3 className="text-xl font-semibold mb-2 text-red-600">
                 Anděl Music Bar
