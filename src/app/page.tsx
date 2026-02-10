@@ -335,7 +335,7 @@ export default function Home() {
                 Svatba
               </h3>
               <p className="text-gray-300 mb-2">Datum: 20.6.2026</p>
-              <p className="text-gray-400">Strakonice</p>
+              <p className="text-gray-400">Nepomuk</p>
             </div>
 
             <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
@@ -351,7 +351,7 @@ export default function Home() {
                 Svatba
               </h3>
               <p className="text-gray-300 mb-2">Datum: 8.8.2026</p>
-              <p className="text-gray-400">Sušice</p>
+              <p className="text-gray-400">Zahorčice</p>
             </div>
           </div>
         </section>
