@@ -353,6 +353,14 @@ export default function Home() {
               <p className="text-gray-300 mb-2">Datum: 8.8.2026</p>
               <p className="text-gray-400">Zahorčice</p>
             </div>
+
+            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
+              <h3 className="text-xl font-semibold mb-2 text-red-600">
+                Svatba
+              </h3>
+              <p className="text-gray-300 mb-2">Datum: 22.8.2026</p>
+              <p className="text-gray-400">Radomyšl</p>
+            </div>
           </div>
         </section>
         
