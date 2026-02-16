@@ -6,6 +6,13 @@ import roubalka from "../../public/roubalka.jpeg";
 import prokop from "../../public/prokop.jpeg";
 
 
+export type Event = {
+  title: string;
+  date: string;
+  location: string;
+  poster_location?: string; 
+};
+
 export const images = [
   "/12.PNG",
   "/1.PNG",
@@ -60,12 +67,11 @@ export const members = [
 ];
 
 
-export const events = [
+export const events : Event[] = [
   { title: "Anděl Music Bar", date: "30.5.2026", location: "Plzeň" },
   { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
   { title: "Svatba", date: "20.6.2026", location: "Strakonice" },
   { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
   { title: "Svatba", date: "8.8.2026", location: "Sušice" },
-  { title: "Svatba", date: "8.8.2026", location: "Sušice", poster: "/4.PNG" },
-  
+  { title: "Svatba", date: "8.8.2026", location: "Sušice", poster_location: "/4.PNG" },
 ];
