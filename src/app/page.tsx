@@ -8,6 +8,7 @@ import heroImg from "../../public/logomv.png";
 import heroImgMobile from "../../public/uvodka_mobil.jpeg";
 
 import { members, images } from "@/lib/data"; // importing data
+import EventSection from "@/../components/sections/EventSection"
 
 
 type PosterModalProps = {
@@ -226,66 +227,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="Akce" className="py-20 text-center bg-black z-100">
-          <h2
-            className="brightness-85 text-6xl text-stroke-2 font-bold font-orbitron text-center mb-12 sm:text-7xl md:text-7xl md:text-stroke-4 lg:text-8xl"
-          >
-            <span className="text-black">A</span>
-            <span className="text-[#D90000]">KCE</span>
-          </h2>
-          <div className="max-w-4xl mx-auto mx-10 grid md:grid-cols-2 gap-8 px-4">
-
-            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">
-                Anděl Music Bar
-              </h3>
-              <p className="text-gray-300 mb-2">Datum: 30.5.2026</p>
-              <p className="text-gray-400">Plzeň</p>
-            </div>
-            {/* <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">
-                Taneční zábava
-              </h3>
-              <p className="text-gray-300 mb-2">Datum: 6.12.2025</p>
-              <p className="text-gray-400">Jinín, Sál nad hostincem</p>
-              <button
-              onClick={() => setPoster("/jinin2.png")}
-              className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
-              Zobrazit plakát
-              </button>
-            </div> */}
-            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">
-                Festival Vítání léta
-              </h3>
-              <p className="text-gray-300 mb-2">Datum: 6.6.2026</p>
-              <p className="text-gray-400">Malenice</p>
-            </div>
-            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">
-                Svatba
-              </h3>
-              <p className="text-gray-300 mb-2">Datum: 20.6.2026</p>
-              <p className="text-gray-400">Strakonice</p>
-            </div>
-
-            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">
-                Diskotéka
-              </h3>
-              <p className="text-gray-300 mb-2">Datum: 27.6.2026</p>
-              <p className="text-gray-400">České Velenice</p>
-            </div>
-
-            <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">
-                Svatba
-              </h3>
-              <p className="text-gray-300 mb-2">Datum: 8.8.2026</p>
-              <p className="text-gray-400">Sušice</p>
-            </div>
-          </div>
-        </section>
+        <EventSection showPosterFunction={(src) => setPoster(src)} />
         
         {/* galerie */}
         <section id="Fotogalerie" className="py-20t text-white">
