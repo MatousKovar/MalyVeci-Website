@@ -13,7 +13,7 @@ export default function EventCard({
   showPosterFunction, // <--- Receive the function here
 }: EventCardProps) {
   return (
-    <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10 hover:scale-105 transition-transform duration-300 flex flex-col justify-between">
+    <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10 hover:scale-105 transition-transform duration-300 flex flex-col justify-between hover:scale-105">
       <div>
         <h3 className="text-xl font-semibold mb-2 text-red-600">{title}</h3>
         <p className="text-gray-300 mb-2">Datum: {date}</p>
