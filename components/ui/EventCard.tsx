@@ -1,25 +1,21 @@
 import React from "react";
-import { Event } from "@/lib/data"
-
+import { Event } from "@/lib/data";
 
 interface EventCardProps extends Event {
   showPosterFunction: (src: string) => void;
 }
 
-export default function EventCard({ 
-  title, 
-  date, 
-  location, 
-  poster_location, 
-  showPosterFunction // <--- Receive the function here
+export default function EventCard({
+  title,
+  date,
+  location,
+  poster_location,
+  showPosterFunction, // <--- Receive the function here
 }: EventCardProps) {
-  
   return (
     <div className="bg-stone-800/70 p-6 rounded-xl shadow-lg z-10 hover:scale-105 transition-transform duration-300 flex flex-col justify-between">
       <div>
-        <h3 className="text-xl font-semibold mb-2 text-red-600">
-          {title}
-        </h3>
+        <h3 className="text-xl font-semibold mb-2 text-red-600">{title}</h3>
         <p className="text-gray-300 mb-2">Datum: {date}</p>
         <p className="text-gray-400">{location}</p>
       </div>

@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from '../../components/Navbar';
-
-
-
+import Navbar from "../../components/Navbar";
 
 export const metadata: Metadata = {
-  title:"MALÝ VĚCI – kapela ze Strakonic a Horažďovic | Oficiální stránky",
+  title: "MALÝ VĚCI – kapela ze Strakonic a Horažďovic | Oficiální stránky",
   description: "Mladá zábavová kapela z okolí Strakonic a Horažďovic",
-  keywords: ["kapela", "zábavová kapela", "svatby", "plesy","Večírky", "Strakonice", "Horažďovice", "Písek", "rock", "pop", "hudba","Malý Věci"],
+  keywords: [
+    "kapela",
+    "zábavová kapela",
+    "svatby",
+    "plesy",
+    "Večírky",
+    "Strakonice",
+    "Horažďovice",
+    "Písek",
+    "rock",
+    "pop",
+    "hudba",
+    "Malý Věci",
+  ],
   icons: {
-    icon: "/favicon.ico", 
+    icon: "/favicon.ico",
   },
   openGraph: {
     title: "MALÝ VĚCI – kapela ze Strakonic a Horažďovic",
@@ -37,11 +47,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-    <head>
-    </head>
-      <body>
-        {children}
-      </body>
+      <head></head>
+      <body>{children}</body>
     </html>
   );
 }
