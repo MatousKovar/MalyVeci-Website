@@ -50,8 +50,8 @@ export default function GallerySection({setPoster}: GallerySectionProps ) {
                 onClick={() => setPoster(src)}
                 width={300}
                 height={200}
-                objectFit="cover"
-                className="w-full h-full"
+                objectFit="contain"
+                className="w-full h-full object-cover"
               />
             </div>
           ))}

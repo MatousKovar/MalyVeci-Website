@@ -15,13 +15,13 @@ export type Event = {
 };
 
 export const images = [
-  "/12.PNG",
+  "/9.PNG",
   "/1.PNG",
   "/jinin.jpeg",
   "/galeriexx.jpg",
-  "/9.PNG",
   "/15.jpeg",
   "/jinin2.png",
+  "/12.PNG",
   "/houba.jpeg",
   "/14.jpeg",
   "/novosedly.jpeg",
@@ -81,7 +81,7 @@ export const events : Event[] = [
   { title: "Svatba", date: "20.6.2026", location: "Nepomuk" },
   { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
   { title: "Svatba", date: "8.8.2026", location: "Zahorčice" },
-  { title: "Svatba", date: "22.8.2026", location: "Radomyšl", poster_location: "/4.PNG" },
+  { title: "Svatba", date: "22.8.2026", location: "Radomyšl",poster_location: "/plakat_houba_velikonoce.png" },
 ];
 
 
