@@ -4,6 +4,7 @@ import mates from "../../public/basak.jpeg";
 import jiri from "../../public/2.png";
 import roubalka from "../../public/roubalka.jpeg";
 import prokop from "../../public/prokop.jpeg";
+import { StaticImageData } from "next/image";
 
 
 export type Event = {
@@ -33,7 +34,12 @@ export const images = [
   "/11.PNG",
 ];
 
-export const members = [
+export type Member = {name: string,
+               role: string,
+               bio: string,
+               image: StaticImageData
+}
+export const members: Member [] = [
   {
     name: "Matouš Kovář",
     role: "Sólová kytara",

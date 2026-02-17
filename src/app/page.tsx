@@ -10,6 +10,7 @@ import { members, images } from "@/lib/data"; // importing data
 import EventSection from "@/../components/sections/EventSection"
 import PosterModal from "@/../components/ui/PosterModal"
 import HeroImageSection from '../../components/sections/HeroImageSection';
+import ONasSection from '../../components/sections/ONasSection';
 
 
 
@@ -67,7 +68,7 @@ export default function Home() {
 
       {/* Main Sections */}
       <main>
-        
+        <ONasSection />
         <EventSection showPosterFunction={(src) => setPoster(src)} />
         
         {/* galerie */}
