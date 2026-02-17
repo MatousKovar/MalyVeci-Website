@@ -74,12 +74,14 @@ export const members: Member [] = [
 
 
 export const events : Event[] = [
+  { title: "Soukromá akce", date: "21.3.2026", location: "Horažďovice U Hlaváčků" },
+  { title: "Velikonoční Houba", date: "4.4.2026", location: "MC Houba Horažďovice" },
   { title: "Anděl Music Bar", date: "30.5.2026", location: "Plzeň" },
   { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
-  { title: "Svatba", date: "20.6.2026", location: "Strakonice" },
+  { title: "Svatba", date: "20.6.2026", location: "Nepomuk" },
   { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
-  { title: "Svatba", date: "8.8.2026", location: "Sušice" },
-  { title: "Svatba", date: "8.8.2026", location: "Sušice", poster_location: "/4.PNG" },
+  { title: "Svatba", date: "8.8.2026", location: "Zahorčice" },
+  { title: "Svatba", date: "22.8.2026", location: "Radomyšl", poster_location: "/4.PNG" },
 ];
 
 
