@@ -4,44 +4,14 @@ import React from "react";
 import Image from "next/image";
 import Navbar from '../../components/Navbar';
 import uvodka from "../../public/uvodka.jpg";
-import heroImg from "../../public/logomv.png"; 
 import heroImgMobile from "../../public/uvodka_mobil.jpeg";
 
 import { members, images } from "@/lib/data"; // importing data
 import EventSection from "@/../components/sections/EventSection"
+import PosterModal from "@/../components/ui/PosterModal"
+import HeroImageSection from '../../components/sections/HeroImageSection';
 
 
-type PosterModalProps = {
-  posterSrc: string | null;  // path to the image, can be null when closed
-  onClose: () => void;       // callback when closing
-};
-
-function PosterModal({ posterSrc, onClose } : PosterModalProps ) {
-  if (!posterSrc) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-      <div className="relative bg-gray-900 p-4 rounded-xl shadow-xl">
-        {/* Poster image */}
-        <Image
-          src={posterSrc}
-          alt="Event Poster"
-          width={500}
-          height={500}
-          className="rounded-lg object-contain w-full h-auto"
-        />
-
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
-        >
-          ✕
-        </button>
-      </div>
-    </div>
-  );
-}
 
 
 export default function Home() {
@@ -93,140 +63,11 @@ export default function Home() {
     
     <Navbar />
     
-
-   <section className="relative w-full h-screen flex justify-center items-center bg-black overflow-hidden">
-      {/* hero image */}
-      <div className="absolute sm:block inset-0">
-        <Image
-          src={uvodka}
-          alt="Foto kapely"
-          fill
-          className="object-cover transition-all duration-300"
-          style={{ filter: `blur(${blur}px)` }}
-          priority
-        />
-      </div>
-      {/* Hero image mobile */}
-      <div className="absolute md:hidden inset-0">
-        <Image
-          src={heroImgMobile}
-          alt="foto kapely mobil"
-          fill
-          className="object-cover transition-all duration-300"
-          style={{ filter: `blur(${blur}px)` }}
-          priority
-        />
-      </div>
-
-      {/* Overlay for better readability */}
-      <div className="relative w-full mt-80">
-      {/* Black bar background (matches image height) */}
-      <div className="absolute inset-0 bg-black/30" />
-        {/* Foreground content */}
-        <div className="relative mx-auto w-64 h-50 md:w-96 md:h-75 brightness-75 z-10">
-          <Image
-            src={heroImg}
-            alt="Logo kapely"
-            fill
-            className="object-contain filter z-5"
-            priority
-           />
-          
-        </div>
-      </div>
-
-        {/* Scroll Down Button */}
-        <button
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-          className="absolute animate-bounce bottom-6 left-1/2 -translate-x-1/2 p-5 rounded-full bg-black/80 hover:bg-[#D90000] transition-colors duration-300"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-    </section>
+    <HeroImageSection blur={blur} />
 
       {/* Main Sections */}
       <main>
-        <section id="onas" className="py-20 bg-black text-white mt-20 z-10">
-          <h2
-            className="text-stroke-2 text-5xl font-bold font-orbitron text-center mb-12 
-            sm:text-6xl md:text-7xl md:text-stroke-4 lg:text-8xl"
-          >
-            <span className="text-black brightness-85">O </span>
-            <span className="text-[#D90000] brightness-85">KAPELE</span>
-          </h2>
-          <div className=" flex text-md md:mx-45 mx-10 sm:my-16 grid sm:grid-cols-1 md:grid-cols-2 gap-4 mb-30 z-10 text-center">
-            {/* <p className=" text-center mx-auto max-w-140  leading-relaxed text-gray-100 px-4 py-4 rounded-lg shadow-lg z-10"> */}
-            <div className=" text-left text-stone-300 mx-auto max-w-140  leading-relaxed text-gray-100 px-4 py-4 rounded-lg shadow-lg z-10">
-            <p className="mb-3">
-            Jsme Malý Věci! Trochu jiná zábavová kapela.</p>
-            <p className="mb-3">
-            Naše pětičlenná parta vznikla v roce 2024 ve Strakonicích původně jako způsob, jak trávit volný čas s nástroji v ruce. Brzy nás ale začalo lákat hrát i pro lidi – a tak jsme už během prvního roku existence odehráli 19 akcí, mezi nimi dva firemní večírky, dvě svatby a ještě k tomu zvládli i státnice.
-            </p>
-            <p className="text-[#D90000] text-lg mb-3"><strong>Řídime se dvěma hlavními motty:</strong></p>            
-            <ul className="list-disc pl-6 space-y-2 mb-3">
-              <li><strong >Pestrý repertoár</strong> – chceme, aby si na své přišli mladší, starší, rockovější i popovější posluchači. Proto hrajeme co nejvíce různých žánrů – od Katy Perry přes Kabáty až po Bon Jovi.</li>
-              <li><strong >Hudba nás musí bavit</strong> - pokud hudba baví kapelu, tak to baví i lidi. Naší hlavní motivací je láska k hudbě, kterou často dáváme najevo jak pohybem, tak zapálením při hraní.</li>
-            </ul>
-
-            <p className="mb-3">
-              Jsme technicky vybavená kapela, vlastníme jak ozvučovací soustavu, tak základní osvětlení, takže váš parket nebude nikdy vypadat nudně. Zkrátka zníme i vypadáme profesionálně.
-            </p>   
-      
-                  
-              </div>
-            {/* </p> */}
-            <div className=" text-left text-stone-300 mx-auto max-w-140  leading-relaxed text-gray-100 px-4 py-4 rounded-lg shadow-lg z-10">
-            <p className="mb-3">
-            Po domluvě jsme schopni doplnit naše vystoupení i o DJ a náš kytarista se postará i o plakát, který nebude jen obyčejnou pozvánkou, ale skutečně upoutá.
-            </p>
-            <p className="mb-3 text-lg"> <strong className="text-[#D90000]">Proč si vybrat kapelu Malý Věci?</strong></p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Pestrý repertoár pro všechny generace</strong> - náš aktuální repertoár čítá přes 90 kousků napříč žánry a etapami populární hudby. Chcete rockový koncert, retro party ve stylu 80. let nebo jen prostě klasickou tancovačku se skladbami, které znáte a milujete? Pak jsme ti praví.</li>
-              {/* <li><strong>Vlastní vybavení</strong></li> */}
-              <li><strong>Jsme mladá krev</strong> - naše vystoupení je stejně tak o hudbě jako o energii a atmosféře, když hrajeme, tak prostě nevydržíme stát na místě.</li>
-              <li><strong>Levnější než konkurence</strong> - hudba pro nás nikdy nebyla o penězích, proto vyjdeme vstříc i pořadatelům menších akcí. </li>
-              <li><strong>Ctíme originál</strong> - Oproti většině zábavových kapel se snažíme přiblížit se co nejvíce originálním nahrávkám. U nás to není jen o tom zahrát pár akordů a zazpívat stejná slova. </li>
-              
-            </ul>
-            </div>
-          </div>
-          <div className="relative max-w-5xl mx-auto space-y-16 px-4 z-10">
-            {members.map((member, i) => (
-              <div
-                key={i}
-                className={`flex mx-10 flex-col overflow-hidden lg:flex-row items-center lg:items-start md:space-x-8 ${
-                  i % 2 === 0 ? "" : "lg:flex-row-reverse lg:space-x-reverse"
-                }`}
-              >
-                <div className="relative w-38 h-48 sm:w-48 sm:h-48 md:w-64 md:h-64 flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-                <div className="mt-4 md:mt-0 text-left md:max-w-xl">
-                  <h3 className="text-xl font-semibold text-[#D90000] z-10">
-                    {member.name}
-                  </h3>
-                  <p className="text-gray-300 italic z-10">{member.role}</p>
-                  <p className="text-gray-400 mt-2 z-20">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
+        
         <EventSection showPosterFunction={(src) => setPoster(src)} />
         
         {/* galerie */}
