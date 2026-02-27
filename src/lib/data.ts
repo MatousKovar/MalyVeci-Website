@@ -74,6 +74,7 @@ export const members: Member [] = [
 
 
 export const events : Event[] = [
+  {title: "Závod Palestra Kbelská 10", date: "7.3.2026", location: "Praha, Kbely"},
   { title: "Soukromá akce", date: "21.3.2026", location: "Horažďovice U Hlaváčků" },
   { title: "Velikonoční Houba", date: "4.4.2026", location: "MC Houba Horažďovice",poster_location: "/plakat_houba_velikonoce.png" },
   { title: "Anděl Music Bar", date: "30.5.2026", location: "Plzeň" },
