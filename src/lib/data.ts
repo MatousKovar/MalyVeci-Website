@@ -74,7 +74,6 @@ export const members: Member [] = [
 
 
 export const events : Event[] = [
-  { title: "Soukromá akce", date: "21.3.2026", location: "Horažďovice U Hlaváčků" },
   { title: "Velikonoční Houba", date: "4.4.2026", location: "MC Houba Horažďovice",poster_location: "/plakat_houba_velikonoce.png" },
   { title: "Anděl Music Bar", date: "30.5.2026", location: "Plzeň" },
   { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
