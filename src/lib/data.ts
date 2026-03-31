@@ -81,6 +81,9 @@ export const events : Event[] = [
   { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
   { title: "Svatba", date: "8.8.2026", location: "Zahorčice" },
   { title: "Svatba", date: "22.8.2026", location: "Radomyšl" },
+  { title: "Maturitní ples", date: "28.11.2026", location: "Mariánské Lázně" },
+  { title: "Maturitní ples", date: "29.1.2027", location: "Strakonice" },
+  { title: "Maturitní ples", date: "20.2.2027", location: "Strakonice" },
 ];
 
 
