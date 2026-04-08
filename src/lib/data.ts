@@ -79,6 +79,7 @@ export const events : Event[] = [
   { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
   { title: "Svatba", date: "20.6.2026", location: "Nepomuk" },
   { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
+  { title: "Open Air", date: "10.7.2026", location: "Šlapanov" },
   { title: "Svatba", date: "8.8.2026", location: "Zahorčice" },
   { title: "Svatba", date: "22.8.2026", location: "Radomyšl" },
   { title: "Maturitní ples", date: "28.11.2026", location: "Mariánské Lázně" },
