@@ -80,7 +80,7 @@ export const events : Event[] = [
   { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
   { title: "Svatba", date: "20.6.2026", location: "Nepomuk" },
   { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
-  { title: "Open Air", date: "10.7.2026", location: "Šlapanov" },
+  { title: "Open Air", date: "10.7.2026", location: "Šlapanov" ,poster_location: "/slapanov_plakat.PNG"},
   { title: "Pivní slavnosti", date: "25.7.2026", location: "Horažďovice" },
   { title: "Svatba", date: "8.8.2026", location: "Zahorčice" },
   { title: "Svatba", date: "22.8.2026", location: "Radomyšl" },
