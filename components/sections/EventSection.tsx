@@ -3,6 +3,7 @@ import { events } from "@/lib/data"; // Import the data
 import EventCard from "@/../components/ui/EventCard"; // Import the look
 import { Calendar } from "@/../components/ui/calendar";
 import { useState } from "react";
+import EventListItem from "../ui/EventListItem";
 
 
 /**Defining data type of input function to EventsSection. Function is passed poster_location and shows popup. Defined in page.tsx */
@@ -25,7 +26,7 @@ export default function EventsSection({
       </h2>
       <div id="calendar_wrapper" className="grid grid-cols-1 md:grid-cols-2 mx-auto max-w-7xl px-4 gap-8">
 
-        <div className="flex justify-center md:justify-end">
+        <div className="flex justify-center hidden md:flex md:justify-end">
           <Calendar
             mode="single"
             selected={date}
@@ -37,11 +38,28 @@ export default function EventsSection({
         </div>
 
         {/* Pravý sloupec: Místo pro budoucí seznam akcí */}
-        <div className="flex flex-col border border-stone-800 rounded-lg p-6 bg-stone-900/50 text-white">
-          <h3 className="text-xl font-bold text-[#D90000] mb-4">Vybrané akce</h3>
-          <p className="text-stone-400 z-10">Zatím tu nic není, ale sem později napojíme vyfiltrovaný seznam z data.ts.</p>
+        <div className="flex flex-col border border-stone-800 rounded-lg p-6 bg-stone-900/50 text-white md:justify-start">
+          <div className="flex flex-col max-h-[500px] overflow-y-auto custom-scrollbar z-10">
+          {events.length > 0 ? (
+            events.map((event, index) => (
+              <EventListItem
+                key={index}
+                title={event.title}
+                date={event.date}
+                location={event.location}
+                poster_location={event.poster_location}
+                description={event.description}
+                showPosterFunction={showPosterFunction}
+              />
+            ))
+          ) : (
+            <p className="p-6 text-stone-500 italic">
+              Zatím tu nejsou žádné naplánované akce.
+            </p>
+          )}          
         </div>
 
+        </div>
       </div>
       
     </section>
