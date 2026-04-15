@@ -7,12 +7,6 @@ import prokop from "../../public/prokop.jpeg";
 import { StaticImageData } from "next/image";
 
 
-export type Event = {
-  title: string;
-  date: string;
-  location: string;
-  poster_location?: string; 
-};
 
 export const images = [
   "/9.PNG",
@@ -74,19 +68,28 @@ export const members: Member [] = [
 ];
 
 
+
+export type Event = {
+  title: string;
+  date: string;
+  location: string;
+  poster_location?: string;
+  description?: string;
+};
+
 export const events : Event[] = [
   // { title: "Velikonoční Houba", date: "4.4.2026", location: "MC Houba Horažďovice",poster_location: "/plakat_houba_velikonoce.png" },
-  { title: "Anděl Music Bar", date: "30.5.2026", location: "Plzeň" },
-  { title: "Festival Vítání léta", date: "6.6.2026", location: "Malenice" },
-  { title: "Svatba", date: "20.6.2026", location: "Nepomuk" },
-  { title: "Diskotéka", date: "27.6.2026", location: "České Velenice" },
-  { title: "Open Air", date: "10.7.2026", location: "Šlapanov" ,poster_location: "/slapanov_plakat.PNG"},
-  { title: "Pivní slavnosti", date: "25.7.2026", location: "Horažďovice" },
-  { title: "Svatba", date: "8.8.2026", location: "Zahorčice" },
-  { title: "Svatba", date: "22.8.2026", location: "Radomyšl" },
-  { title: "Maturitní ples", date: "28.11.2026", location: "Mariánské Lázně" },
-  { title: "Maturitní ples", date: "29.1.2027", location: "Strakonice" },
-  { title: "Maturitní ples", date: "20.2.2027", location: "Strakonice" },
+  { title: "Anděl Music Bar", date: "2026-05-30", location: "Plzeň", description: "Naše první velká akce v Plzni! Přijďte nás podpořit a užít si skvělou hudbu v Anděl Music Baru. Detaily Brzy" },
+  { title: "Festival Vítání léta", date: "2026-06-06", location: "Malenice", description: "Festival kde si zahrajeme s více kapelami, čas bude upřesněn." },
+  { title: "Svatba", date: "2026-06-20", location: "Nepomuk" },
+  { title: "Diskotéka", date: "2026-06-27", location: "České Velenice",description: "Klasická zábava, hrajeme do 22 hodin" },
+  { title: "Open Air", date: "2026-07-10", location: "Šlapanov" ,poster_location: "/slapanov_plakat.PNG",description: "Letní open air ve Šlapanově, kde hrajeme od 16 do 19 hodin."},
+  { title: "Pivní slavnosti", date: "2026-07-25", location: "Stodola, Horažďovice", description: "Tradiční pivní slavnosti ve Stodole, kde zahrajeme celý večer." },
+  { title: "Svatba", date: "2026-08-08", location: "Zahorčice" },
+  { title: "Svatba", date: "2026-08-22", location: "Radomyšl" },
+  { title: "Maturitní ples", date: "2026-11-28", location: "Mariánské Lázně" },
+  { title: "Maturitní ples", date: "2027-01-29", location: "Strakonice" },
+  { title: "Maturitní ples", date: "2027-02-20", location: "Strakonice" },
 ];
 
 
