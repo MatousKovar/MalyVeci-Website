@@ -5,6 +5,7 @@ import { Calendar } from "@/../components/ui/calendar";
 import { useState, useRef } from "react"; // Přidán useRef, pokud by bylo potřeba, ale vystačíme si s useState
 import EventListItem from "../ui/EventListItem";
 import { format } from "date-fns/format";
+import { cs } from "date-fns/locale";
 
 
 /**Defining data type of input function to EventsSection. Function is passed poster_location and shows popup. Defined in page.tsx */
@@ -18,6 +19,8 @@ export default function EventsSection({
 }: EventsSectionProps) {
 
   const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const [highlightedDate, setHighlightedDate] = useState<string | null>(null);
 
   // logika pro propojeni kalendare s listem vpravo
   const eventDates = events.map(event => new Date(event.date));
@@ -33,6 +36,12 @@ export default function EventsSection({
         behavior: "smooth", 
         block: "nearest" 
       });
+
+      setHighlightedDate(dateId);
+
+      setTimeout(() => {
+          setHighlightedDate(null);
+        }, 4000);
     }
   }
 };
@@ -51,6 +60,7 @@ export default function EventsSection({
             weekStartsOn={1}
             selected={date}
             onSelect={handleDateSelect}
+            locale={cs}
             // Vracím sem i tmavé styly, aby to ladilo s webem
             className="rounded-lg border bg-stone-900/30 text-white border-stone-800 w-full h-full"
             captionLayout="dropdown"
@@ -74,6 +84,7 @@ export default function EventsSection({
                 poster_location={event.poster_location}
                 description={event.description}
                 showPosterFunction={showPosterFunction}
+                isHighlighted={highlightedDate === event.date}
               />
             ))
           ) : (

@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Event } from "@/lib/data";
 
 interface EventListItemProps extends Event {
   showPosterFunction: (src: string) => void;
+  isHighlighted?: boolean; // Přidáno pro možnost zvýraznění
 }
 
 export default function EventListItem({
@@ -12,8 +13,9 @@ export default function EventListItem({
   date,
   location,
   poster_location,
-  description, // Nezapomeň, že teď potřebujeme i description
+  description,
   showPosterFunction,
+isHighlighted = false,
 }: EventListItemProps) {
   // Stav pro sledování, zda je detail akce rozbalený
   const [isExpanded, setIsExpanded] = useState(false);
@@ -32,8 +34,18 @@ export default function EventListItem({
       })
     : date; 
 
+    useEffect(() => {
+    if (isHighlighted) {
+      setIsExpanded(true);
+    }
+  }, [isHighlighted]); // Tento kód se spustí vždy, když se změní hodnota isHighlighted
   return (
-    <div id={date} className="group flex flex-col border-b border-stone-800 bg-transparent hover:bg-stone-900/60 transition-colors duration-300">
+    
+    <div id={date} className={`group flex flex-col bg-transparent hover:bg-stone-900/60 transition-all duration-1000 ${
+        isHighlighted 
+          ? "border-l-4 border-l-[#D90000] border-b border-b-stone-800 bg-[#D90000]/10" 
+          : "border-l-4 border-l-transparent border-b border-b-stone-800"
+      }`}>
       
       {/* HLAVNÍ ŘÁDEK (Kliknutím na něj se rozbalí/sbalí detail) */}
       <div 
