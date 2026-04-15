@@ -79,8 +79,8 @@ export type Event = {
 
 export const events : Event[] = [
   // { title: "Velikonoční Houba", date: "4.4.2026", location: "MC Houba Horažďovice",poster_location: "/plakat_houba_velikonoce.png" },
-  { title: "Anděl Music Bar", date: "2026-05-30", location: "Plzeň", description: "Naše první velká akce v Plzni! Přijďte nás podpořit a užít si skvělou hudbu v Anděl Music Baru." },
-  { title: "Festival Vítání léta", date: "2026-06-06", location: "Malenice", description: "Festival s více kapelami, čas bude upřesněn." },
+  { title: "Anděl Music Bar", date: "2026-05-30", location: "Plzeň", description: "Naše první velká akce v Plzni! Přijďte nás podpořit a užít si skvělou hudbu v Anděl Music Baru. Detaily Brzy" },
+  { title: "Festival Vítání léta", date: "2026-06-06", location: "Malenice", description: "Festival kde si zahrajeme s více kapelami, čas bude upřesněn." },
   { title: "Svatba", date: "2026-06-20", location: "Nepomuk" },
   { title: "Diskotéka", date: "2026-06-27", location: "České Velenice",description: "Klasická zábava, hrajeme do 22 hodin" },
   { title: "Open Air", date: "2026-07-10", location: "Šlapanov" ,poster_location: "/slapanov_plakat.PNG",description: "Letní open air ve Šlapanově, kde hrajeme od 16 do 19 hodin."},

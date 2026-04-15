@@ -32,12 +32,11 @@ export default function EventsSection({
             selected={date}
             onSelect={setDate}
             // Vracím sem i tmavé styly, aby to ladilo s webem
-            className="rounded-lg border bg-stone-900/50 text-white border-stone-800 w-fit"
+            className="rounded-lg border bg-stone-900/30 text-white border-stone-800 w-full h-full"
             captionLayout="dropdown"
           />
         </div>
 
-        {/* Pravý sloupec: Místo pro budoucí seznam akcí */}
         <div className="flex flex-col border border-stone-800 rounded-lg p-6 bg-stone-900/50 text-white md:justify-start">
           <div className="flex flex-col max-h-[500px] overflow-y-auto custom-scrollbar z-10">
           {events.length > 0 ? (
