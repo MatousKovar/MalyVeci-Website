@@ -33,7 +33,7 @@ export default function EventListItem({
     : date; 
 
   return (
-    <div className="group flex flex-col border-b border-stone-800 bg-transparent hover:bg-stone-900/60 transition-colors duration-300">
+    <div id={date} className="group flex flex-col border-b border-stone-800 bg-transparent hover:bg-stone-900/60 transition-colors duration-300">
       
       {/* HLAVNÍ ŘÁDEK (Kliknutím na něj se rozbalí/sbalí detail) */}
       <div 
