@@ -1,21 +1,62 @@
-import Image from "next/image";
-import { members } from "@/lib/data"; // importing data
+"use client";
+import { useRef, useState, useEffect } from "react";
+import { members } from "@/lib/data";
 import MemberCard from "../ui/MemberCard";
 
-
-
 export default function ONasSection() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  const goTo = (i: number) => {
+    const clamped = Math.max(0, Math.min(members.length - 1, i));
+    const track = trackRef.current;
+    if (!track) return;
+    const child = track.children[clamped] as HTMLElement | undefined;
+    if (child) {
+      track.scrollTo({ left: child.offsetLeft - track.offsetLeft, behavior: "smooth" });
+    }
+    setActive(clamped);
+  };
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const center = track.scrollLeft + track.clientWidth / 2;
+        let bestIdx = 0;
+        let bestDist = Infinity;
+        Array.from(track.children).forEach((c, i) => {
+          const el = c as HTMLElement;
+          const mid = el.offsetLeft + el.offsetWidth / 2;
+          const dist = Math.abs(mid - (track.offsetLeft + center));
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestIdx = i;
+          }
+        });
+        setActive(bestIdx);
+      });
+    };
+    track.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      track.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <section id="onas" className="py-20 bg-black text-white mt-20 z-10">
       <h2
-        className="text-stroke-2 text-5xl font-bold font-orbitron text-center mb-12 
+        className="text-stroke-2 text-5xl font-bold font-orbitron text-center mb-12
               sm:text-6xl md:text-7xl md:text-stroke-4 lg:text-8xl"
       >
         <span className="text-black brightness-85">O </span>
         <span className="text-[#D90000] brightness-85">KAPELE</span>
       </h2>
       <div className=" flex text-md md:mx-45 mx-10 sm:my-16 grid sm:grid-cols-1 md:grid-cols-2 gap-4 mb-30 z-10 text-center">
-        {/* <p className=" text-center mx-auto max-w-140  leading-relaxed text-gray-100 px-4 py-4 rounded-lg shadow-lg z-10"> */}
         <div className=" text-left text-stone-300 mx-auto max-w-140  leading-relaxed text-gray-100 px-4 py-4 rounded-lg shadow-lg z-10">
           <p className="mb-3">Jsme Malý Věci! Trochu jiná zábavová kapela.</p>
           <p className="mb-3">
@@ -41,14 +82,12 @@ export default function ONasSection() {
               často dáváme najevo jak pohybem, tak zapálením při hraní.
             </li>
           </ul>
-
           <p className="mb-3">
             Jsme technicky vybavená kapela, vlastníme jak ozvučovací soustavu,
             tak základní osvětlení, takže váš parket nebude nikdy vypadat nudně.
             Zkrátka zníme i vypadáme profesionálně.
           </p>
         </div>
-        {/* </p> */}
         <div className=" text-left text-stone-300 mx-auto max-w-140  leading-relaxed text-gray-100 px-4 py-4 rounded-lg shadow-lg z-10">
           <p className="mb-3">
             Po domluvě jsme schopni doplnit naše vystoupení i o DJ a náš
@@ -87,10 +126,76 @@ export default function ONasSection() {
           </ul>
         </div>
       </div>
-      <div className="relative max-w-5xl mx-auto space-y-16 px-4 z-10">
-        {members.map((member, i) => (
-          <MemberCard key={i} i={i} {...member}/>
-        ))}
+
+      {/* Member carousel */}
+      <div className="relative z-10 max-w-2xl mx-auto px-4">
+        <div
+          ref={trackRef}
+          className="
+            flex
+            overflow-x-auto
+            snap-x snap-mandatory
+            gap-4
+            [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+          "
+        >
+          {members.map((member, i) => (
+            <div key={i} className="snap-center shrink-0 w-full">
+              <MemberCard i={i} {...member} />
+            </div>
+          ))}
+        </div>
+
+        {/* Prev / Next */}
+        <div className="flex items-center justify-between mt-6">
+          <button
+            onClick={() => goTo(active - 1)}
+            disabled={active === 0}
+            aria-label="Předchozí člen"
+            className="
+              w-11 h-11 rounded-full border border-white/20
+              flex items-center justify-center
+              text-white/80 hover:text-white hover:border-[#D90000]
+              transition disabled:opacity-30 disabled:hover:border-white/20
+            "
+          >
+            ‹
+          </button>
+
+          {/* Dots */}
+          <div className="flex items-center gap-2">
+            {members.map((m, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                aria-label={`Zobrazit ${m.name}`}
+                className={`h-1.5 rounded-full transition-all ${
+                  active === i
+                    ? "w-8 bg-[#D90000]"
+                    : "w-1.5 bg-white/30 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={() => goTo(active + 1)}
+            disabled={active === members.length - 1}
+            aria-label="Další člen"
+            className="
+              w-11 h-11 rounded-full border border-white/20
+              flex items-center justify-center
+              text-white/80 hover:text-white hover:border-[#D90000]
+              transition disabled:opacity-30 disabled:hover:border-white/20
+            "
+          >
+            ›
+          </button>
+        </div>
+
+        <p className="text-center text-xs tracking-[0.2em] uppercase text-stone-400 mt-3">
+          {String(active + 1).padStart(2, "0")} / {String(members.length).padStart(2, "0")}
+        </p>
       </div>
     </section>
   );
