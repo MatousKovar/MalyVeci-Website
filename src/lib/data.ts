@@ -88,6 +88,7 @@ export const events : Event[] = [
   { title: "Open Air", date: "2026-07-10", location: "Šlapanov" ,poster_location: "/slapanov_plakat.PNG",description: "Letní open air ve Šlapanově, kde hrajeme od 16 do 19 hodin."},
   { title: "Pivní slavnosti", date: "2026-07-25", location: "Stodola, Horažďovice", description: "Tradiční pivní slavnosti ve Stodole, kde zahrajeme celý večer." },
   { title: "Svatba", date: "2026-08-08", location: "Zahorčice" },
+  { title: "Pouť", date: "2026-08-09", location: "Volyně" },
   { title: "Svatba", date: "2026-08-22", location: "Radomyšl" },
   { title: "Maturitní ples", date: "2026-11-28", location: "Mariánské Lázně" },
   { title: "Maturitní ples", date: "2027-01-29", location: "Strakonice" },
