@@ -87,15 +87,15 @@ export const events : Event[] = [
   // { title: "Koncert", date: "2026-07-01", location: "Plzeň, Purkmistr" ,description: "Přijďte si nás poslechnout na hudební středu do Purkmistru."},
   // { title: "Motosraz", date: "2026-07-03", location: "Strašice" ,description: "Zahrajeme kolem 19 hod."},
   // { title: "Open Air", date: "2026-07-10", location: "Šlapanov" ,poster_location: "/slapanov_plakat.PNG",description: "Letní open air ve Šlapanově, kde hrajeme od 16 do 19 hodin."},
-  { title: "HD Fest", date: "2026-07-18", location: "Horažďovice" ,description: "Opět po roce si zahrajeme na náměstí, tentokrát budeme celou ankci zakončovat. Začínáme ve 20 hodin."},
+  // { title: "HD Fest", date: "2026-07-18", location: "Horažďovice" ,description: "Opět po roce si zahrajeme na náměstí, tentokrát budeme celou ankci zakončovat. Začínáme ve 20 hodin."},
   { title: "Pivní slavnosti", date: "2026-07-25", location: "Stodola, Horažďovice", description: "Tradiční pivní slavnosti ve Stodole, kde budeme hrát celý večer." },
   { title: "Svatba", date: "2026-08-08", location: "Zahorčice" },
   { title: "Pouť", date: "2026-08-09", location: "Volyně" },
-  // { title: "Otevírání fotbalového stadionu", date: "2026-08-22", location: "Horažďovice, Lipky", description: "Podrobnosti brzy..." },
+  { title: "Rezervace", date: "2026-08-22", location: "Horažďovice, Lipky", description: "Podrobnosti brzy..." },
   { title: "Maturitní ples", date: "2026-11-28", location: "Mariánské Lázně" },
   { title: "Rezervace", date: "2026-12-12", location: "Horažďovice" },
   { title: "Maturitní ples", date: "2027-01-29", location: "Strakonice" },
-  { title: "Školní ples", date: "2027-02-05", location: "Krušovice" },
+  // { title: "Školní ples", date: "2027-02-05", location: "Krušovice" },
   { title: "Maturitní ples", date: "2027-02-20", location: "Strakonice" },
 ];
 
