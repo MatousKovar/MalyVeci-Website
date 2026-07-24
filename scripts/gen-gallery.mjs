@@ -58,6 +58,17 @@ try {
   console.warn("[gallery] Složka public/gallery neexistuje – generuji prázdný seznam.");
 }
 
+// Nepodporované soubory (typicky HEIC z iPhonu) prohlížeč nezobrazí – upozorníme.
+const skipped = files.filter(
+  (f) => !f.startsWith(".") && extname(f) !== "" && !EXTS.has(extname(f).toLowerCase())
+);
+if (skipped.length) {
+  console.warn(
+    `[gallery] Přeskočeno ${skipped.length} nepodporovaných souborů (prohlížeč je nezobrazí): ${skipped.join(", ")}`
+  );
+  console.warn("[gallery] Doporučení: exportuj/ulož je jako JPG nebo PNG.");
+}
+
 const images = files
   .filter((f) => !f.startsWith(".") && EXTS.has(extname(f).toLowerCase()))
   .sort((a, b) => a.localeCompare(b, "cs", { numeric: true }))

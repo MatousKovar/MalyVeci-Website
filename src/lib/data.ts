@@ -1,5 +1,5 @@
 
-import matous from "../../public/ja.jpeg";
+import matous from "../../public/ja.JPG";
 import mates from "../../public/basak.jpeg";
 import jiri from "../../public/2.png";
 import roubalka from "../../public/roubalka.jpeg";
@@ -76,6 +76,7 @@ export const events : Event[] = [
   { title: "Rezervace", date: "2026-08-22", location: "Horažďovice, Lipky", description: "Podrobnosti brzy..." },
   { title: "Maturitní ples", date: "2026-11-28", location: "Mariánské Lázně" },
   { title: "Rezervace", date: "2026-12-12", location: "Horažďovice" },
+  { title: "Slunce ve skle", date: "2026-09-19", location: "Plzeň, Purkmistr" },
   { title: "Maturitní ples", date: "2027-01-29", location: "Strakonice" },
   // { title: "Školní ples", date: "2027-02-05", location: "Krušovice" },
   { title: "Maturitní ples", date: "2027-02-20", location: "Strakonice" },

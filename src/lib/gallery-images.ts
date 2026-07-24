@@ -49,9 +49,9 @@ export const galleryImages: GalleryImage[] = [
     "height": 1350
   },
   {
-    "src": "/gallery/7.PNG",
-    "width": 1080,
-    "height": 1350
+    "src": "/gallery/5be256c1bef286ef02b616598ac489b9.JPEG",
+    "width": 1536,
+    "height": 2048
   },
   {
     "src": "/gallery/8.PNG",
@@ -64,6 +64,11 @@ export const galleryImages: GalleryImage[] = [
     "height": 1350
   },
   {
+    "src": "/gallery/11.jpg",
+    "width": 4892,
+    "height": 6115
+  },
+  {
     "src": "/gallery/11.PNG",
     "width": 1080,
     "height": 1350
@@ -72,6 +77,11 @@ export const galleryImages: GalleryImage[] = [
     "src": "/gallery/12.PNG",
     "width": 1080,
     "height": 1350
+  },
+  {
+    "src": "/gallery/13.jpg",
+    "width": 1536,
+    "height": 2048
   },
   {
     "src": "/gallery/14.jpeg",
@@ -87,36 +97,6 @@ export const galleryImages: GalleryImage[] = [
     "src": "/gallery/galeriexx.jpg",
     "width": 2720,
     "height": 3627
-  },
-  {
-    "src": "/gallery/hlavacci.jpeg",
-    "width": 793,
-    "height": 1057
-  },
-  {
-    "src": "/gallery/houba.jpeg",
-    "width": 1587,
-    "height": 2116
-  },
-  {
-    "src": "/gallery/jinin.jpeg",
-    "width": 793,
-    "height": 1057
-  },
-  {
-    "src": "/gallery/jinin2.png",
-    "width": 1587,
-    "height": 2245
-  },
-  {
-    "src": "/gallery/novosedly.jpeg",
-    "width": 1587,
-    "height": 2116
-  },
-  {
-    "src": "/gallery/plakat_houba_velikonoce.png",
-    "width": 1414,
-    "height": 2000
   },
   {
     "src": "/gallery/roubalka_deti.jpg",
