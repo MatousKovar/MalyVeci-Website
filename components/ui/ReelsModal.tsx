@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { handleThumbError, ytThumb } from "./youtube";
 
 type ReelsModalProps = {
   ids: string[];
@@ -142,13 +143,10 @@ export default function ReelsModal({ ids, index, onClose }: ReelsModalProps) {
                     // Neaktivní reel = jen náhled (šetří výkon, zastaví přehrávání)
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={`https://i.ytimg.com/vi/${id}/hq720.jpg`}
+                      src={ytThumb(id)}
                       alt=""
                       loading="lazy"
-                      onError={(e) => {
-                        const img = e.currentTarget;
-                        if (!img.src.endsWith("hqdefault.jpg")) img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-                      }}
+                      onError={(e) => handleThumbError(e, id)}
                       className="h-full w-full object-cover opacity-60"
                     />
                   )}
