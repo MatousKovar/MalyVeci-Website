@@ -6,7 +6,6 @@ import Navbar from "../../components/Navbar";
 import uvodka from "../../public/uvodka.jpg";
 import heroImgMobile from "../../public/uvodka_mobil.jpeg";
 
-import { members, images } from "@/lib/data"; // importing data
 import EventSection from "@/../components/sections/EventSection";
 import PosterModal from "@/../components/ui/PosterModal";
 import HeroImageSection from "../../components/sections/HeroImageSection";
@@ -70,7 +69,7 @@ export default function Home() {
 
         <EventSection showPosterFunction={(src) => setPoster(src)} />
 
-        <GallerySection setPoster={(src) => setPoster(src)} />
+        <GallerySection />
 
         <VideosSection />
 

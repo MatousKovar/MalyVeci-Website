@@ -1,62 +1,64 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import { images } from "@/lib/data";
+import { motion } from "framer-motion";
+import { galleryImages } from "@/lib/gallery-images";
+import GalleryLightbox from "@/../components/ui/GalleryLightbox";
 
-type GallerySectionProps = {setPoster: (src: string) => void}
+export default function GallerySection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-export default function GallerySection({setPoster}: GallerySectionProps ) {
   return (
-    <section id="Fotogalerie" className="py-20t text-white">
+    <section id="Fotogalerie" className="py-20 text-white">
       <h2 className="text-5xl text-stroke-2 brightness-85 font-bold font-orbitron text-center mb-12 sm:text-6xl md:text-7xl md:text-stroke-4 lg:text-8xl">
         <span className="text-black">FO</span>
         <span className="text-[#D90000]">TOGRAFIE</span>
       </h2>
 
-      <div className="relative max-w-7xl mx-auto px-4">
-        {/* Buttons */}
-        <button
-          onClick={() =>
-            document
-              .getElementById("galleryScroll")!
-              .scrollBy({ left: -300, behavior: "smooth" })
-          }
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 bg-black/50 rounded-full hover:bg-black/70"
-        >
-          &#8592;
-        </button>
-        <button
-          onClick={() =>
-            document
-              .getElementById("galleryScroll")!
-              .scrollBy({ left: 300, behavior: "smooth" })
-          }
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 bg-black/50 rounded-full hover:bg-black/70"
-        >
-          &#8594;
-        </button>
-
-        {/* Scrollable gallery */}
-        <div
-          id="galleryScroll"
-          className="flex overflow-x-auto gap-4 scroll-smooth py-4 no-scrollbar"
-        >
-          {images.map((src, i) => (
-            <div
-              key={i}
-              className=" flex-shrink-0 rounded-lg overflow-hidden shadow-lg cursor-pointer"
+      <div className="mx-auto max-w-7xl px-4">
+        {/* Masonry přes CSS columns – fotky na výšku i na šířku zapadnou bez ořezu */}
+        <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4 [column-fill:_balance]">
+          {galleryImages.map((img, i) => (
+            <motion.button
+              key={img.src}
+              type="button"
+              onClick={() => setOpenIndex(i)}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: (i % 4) * 0.08, ease: "easeOut" }}
+              className="group mb-4 block w-full break-inside-avoid overflow-hidden rounded-xl shadow-lg ring-1 ring-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D90000]"
             >
-              <Image
-                src={src}
-                alt={`Kapela foto ${i}`}
-                onClick={() => setPoster(src)}
-                width={300}
-                height={200}
-                objectFit="contain"
-                className="w-full h-full object-cover"
-              />
-            </div>
+              <div className="relative overflow-hidden">
+                <Image
+                  src={img.src}
+                  alt={`Fotka kapely ${i + 1}`}
+                  width={img.width}
+                  height={img.height}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  className="h-auto w-full scale-100 saturate-[.92] transition duration-500 ease-out group-hover:scale-[1.04] group-hover:saturate-110"
+                />
+                {/* Jemné ztmavení + rozzáření při najetí */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              </div>
+            </motion.button>
           ))}
         </div>
+
+        {galleryImages.length === 0 && (
+          <p className="text-center text-white/50">
+            Zatím tu nejsou žádné fotky – nahraj je do složky <code>public/gallery</code>.
+          </p>
+        )}
       </div>
+
+      <GalleryLightbox
+        images={galleryImages}
+        index={openIndex}
+        onClose={() => setOpenIndex(null)}
+        onNavigate={setOpenIndex}
+      />
     </section>
   );
 }

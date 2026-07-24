@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "gallery": "node scripts/gen-gallery.mjs",
+    "predev": "node scripts/gen-gallery.mjs",
+    "prebuild": "node scripts/gen-gallery.mjs",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

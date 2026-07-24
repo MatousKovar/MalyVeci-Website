@@ -8,26 +8,8 @@ import { StaticImageData } from "next/image";
 
 
 
-export const images = [
-  "/9.PNG",
-  "/1.PNG",
-  "/jinin.jpeg",
-  "/galeriexx.jpg",
-  "/15.jpeg",
-  "/jinin2.png",
-  "/12.PNG",
-  "/houba.jpeg",
-  "/14.jpeg",
-  "/novosedly.jpeg",
-  "/4.PNG",
-  "/plakat_houba_velikonoce.png",
-  "/5.PNG",
-  "/hlavacci.jpeg",
-  "/7.PNG",
-  "/roubalka_deti.jpg",
-  "/8.PNG",
-  "/11.PNG",
-];
+// Fotky galerie se už neřídí odsud – automaticky se načítají ze složky
+// public/gallery (viz src/lib/gallery-images.ts, generuje `npm run gallery`).
 
 export type Member = {name: string,
                role: string,
