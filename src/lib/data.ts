@@ -1,8 +1,8 @@
 
-import matous from "../../public/ja.JPG";
+import matous from "../../public/ja.jpg";
 import mates from "../../public/basak.jpeg";
 import jiri from "../../public/2.png";
-import roubalka from "../../public/roubalka.jpeg";
+import roubalka from "../../public/roubalka.jpg";
 import prokop from "../../public/prokop.jpeg";
 import { StaticImageData } from "next/image";
 
@@ -82,6 +82,21 @@ export const events : Event[] = [
   { title: "Maturitní ples", date: "2027-02-20", location: "Strakonice" },
 ];
 
+
+// YouTube Shorts do sekce „Poslechni si nás".
+// Stačí vložit celý odkaz na short (např. https://www.youtube.com/shorts/XXXX),
+// klasický odkaz na video, youtu.be odkaz, nebo jen samotné ID videa – vše se zpracuje.
+export const youtubeShorts: string[] = [
+  "iDQUGjGwNrs",
+  "N5wYJKatssw",
+  "kZdWxsTCQ5o",
+  "jN81OZ1XY74",
+  "cTtbS6OfMmA",
+  "JQ9-q513whw",
+  "Syhfb6TsR7w",
+  "u8vwHk4DVBQ",
+  "t0wsmIPrzcY",
+];
 
 export const spotifyTracks = [
   "https://open.spotify.com/embed/track/6wnc03soJZURZVtyAbK81X?utm_source=generator",

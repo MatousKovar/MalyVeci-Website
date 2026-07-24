@@ -69,6 +69,14 @@
     .font-orbitron {
       font-family: "Orbitron", sans-serif;
     }
+    /* Skryty posuvnik (pro horizontalni feedy) */
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
 }
 
 body {

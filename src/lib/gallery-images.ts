@@ -54,6 +54,11 @@ export const galleryImages: GalleryImage[] = [
     "height": 2048
   },
   {
+    "src": "/gallery/6.jpg",
+    "width": 4341,
+    "height": 5426
+  },
+  {
     "src": "/gallery/8.PNG",
     "width": 1080,
     "height": 1350
@@ -72,6 +77,11 @@ export const galleryImages: GalleryImage[] = [
     "src": "/gallery/11.PNG",
     "width": 1080,
     "height": 1350
+  },
+  {
+    "src": "/gallery/12.jpg",
+    "width": 7360,
+    "height": 4912
   },
   {
     "src": "/gallery/12.PNG",
@@ -97,6 +107,11 @@ export const galleryImages: GalleryImage[] = [
     "src": "/gallery/galeriexx.jpg",
     "width": 2720,
     "height": 3627
+  },
+  {
+    "src": "/gallery/IMG_5344.jpeg",
+    "width": 3024,
+    "height": 4032
   },
   {
     "src": "/gallery/roubalka_deti.jpg",
