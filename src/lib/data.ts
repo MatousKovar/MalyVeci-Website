@@ -74,6 +74,7 @@ export const events : Event[] = [
   { title: "Svatba", date: "2026-08-08", location: "Zahorčice" },
   { title: "Pouť", date: "2026-08-09", location: "Volyně" },
   { title: "Rezervace", date: "2026-08-22", location: "Horažďovice, Lipky", description: "Podrobnosti brzy..." },
+  { title: "Posvícenská zábava", date: "2026-10-17", location: "Doubravice", description: "Podrobnosti brzy..." },
   { title: "Maturitní ples", date: "2026-11-28", location: "Mariánské Lázně" },
   { title: "Rezervace", date: "2026-12-12", location: "Horažďovice" },
   { title: "Slunce ve skle", date: "2026-09-19", location: "Plzeň, Purkmistr" },
