@@ -14,7 +14,7 @@ export default function Navbar() {
             
   
             {/* Desktop menu */}
-            <div className="hidden sm:flex space-x-8">
+            <div className="hidden sm:flex items-center space-x-8">
               <Image
                 src="/mvmaly.png" // path to your logo (in /public/logo.png)
                 alt="Logo"
@@ -37,13 +37,13 @@ export default function Navbar() {
                   {link}
                 </a>
               ))}
-              <a
-                href="/admin"
-                className="whitespace-nowrap text-sm font-medium tracking-wide text-stone-400 transition-colors hover:text-[#D90000]"
-              >
-                Správa webu
-              </a>
             </div>
+            <a
+              href="/admin"
+              className="hidden sm:inline-flex shrink-0 items-center whitespace-nowrap text-sm font-medium tracking-wide text-stone-400 transition-colors hover:text-[#D90000]"
+            >
+              Správa webu
+            </a>
   
             {/* Mobile menu button */}
             <div className="sm:hidden flex items-center justify-between w-full px-4">              
