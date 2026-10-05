@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   title: "MALÝ VĚCI – kapela ze Strakonic a Horažďovic | Oficiální stránky",
   description: "Mladá zábavová kapela z okolí Strakonic a Horažďovic",
   keywords: [
+    "kapela strakonice",
+    "Kapela horažďovice",
     "kapela",
     "zábavová kapela",
     "svatby",
