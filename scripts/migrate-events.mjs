@@ -4,8 +4,8 @@ import { basename, extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@sanity/client";
 import eventSeed from "../src/lib/event-seed.json" with { type: "json" };
+import sanityConfig from "../src/lib/sanity/api-version.json" with { type: "json" };
 
-const apiVersion = "2026-10-05";
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 const token = process.env.SANITY_API_WRITE_TOKEN;
@@ -17,7 +17,7 @@ if (!projectId || !dataset || !token) {
 const client = createClient({
   projectId,
   dataset,
-  apiVersion,
+  apiVersion: sanityConfig.apiVersion,
   token,
   useCdn: false,
 });

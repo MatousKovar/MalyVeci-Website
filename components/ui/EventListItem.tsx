@@ -5,7 +5,6 @@ import { parseISO } from "date-fns/parseISO";
 import type { Event } from "@/lib/events";
 
 interface EventListItemProps extends Event {
-  eventKey: string;
   showPosterFunction: (src: string) => void;
   isHighlighted?: boolean; // Přidáno pro možnost zvýraznění
 }
@@ -16,7 +15,6 @@ export default function EventListItem({
   location,
   poster_location,
   description,
-  eventKey,
   showPosterFunction,
 isHighlighted = false,
 }: EventListItemProps) {
@@ -44,7 +42,7 @@ isHighlighted = false,
   }, [isHighlighted]); // Tento kód se spustí vždy, když se změní hodnota isHighlighted
   return (
     
-    <div id={eventKey} data-event-date={date} className={`group flex flex-col bg-transparent hover:bg-stone-900/60 transition-all duration-1000 ${
+    <div data-event-date={date} className={`group flex flex-col bg-transparent hover:bg-stone-900/60 transition-all duration-1000 ${
         isHighlighted 
           ? "border-l-4 border-l-[#D90000] border-b border-b-stone-800 bg-[#D90000]/10" 
           : "border-l-4 border-l-transparent border-b border-b-stone-800"

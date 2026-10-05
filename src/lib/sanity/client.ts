@@ -1,7 +1,6 @@
 import "server-only";
 import { createClient } from "@sanity/client";
-
-const apiVersion = "2026-10-05";
+import sanityConfig from "@/lib/sanity/api-version.json";
 
 export function getSanityClient() {
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
@@ -14,7 +13,7 @@ export function getSanityClient() {
   return createClient({
     projectId,
     dataset,
-    apiVersion,
+    apiVersion: sanityConfig.apiVersion,
     useCdn: true,
     perspective: "published",
   });

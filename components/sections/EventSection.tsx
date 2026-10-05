@@ -90,7 +90,6 @@ export default function EventsSection({
               return (
                 <EventListItem
                   key={eventKey}
-                  eventKey={eventKey}
                   title={event.title}
                   date={event.date}
                   location={event.location}
