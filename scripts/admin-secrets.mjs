@@ -1,9 +1,12 @@
+import { chmod, readFile, writeFile } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
 import { stdin, stdout } from "node:process";
+import { resolve } from "node:path";
 import { hashPassword } from "../src/lib/admin/session-crypto.mjs";
 
 let pendingInput = "";
 let skipNextLineFeed = false;
+const adminEnvNames = ["ADMIN_PASSWORD_HASH", "ADMIN_SESSION_SECRET"];
 
 function readHiddenPassword(promptText) {
   if (!stdin.isTTY || typeof stdin.setRawMode !== "function") {
@@ -67,6 +70,52 @@ function readHiddenPassword(promptText) {
   });
 }
 
+async function saveAdminSecrets(passwordHash, sessionSecret) {
+  const envPath = resolve(process.cwd(), ".env.local");
+  let contents = "";
+
+  try {
+    contents = await readFile(envPath, "utf8");
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
+
+  const lines = contents.split(/\r?\n/);
+  if (lines.at(-1) === "") lines.pop();
+
+  const values = new Map([
+    ["ADMIN_PASSWORD_HASH", passwordHash],
+    ["ADMIN_SESSION_SECRET", sessionSecret],
+  ]);
+  const written = new Set();
+  const updatedLines = [];
+
+  for (const line of lines) {
+    const matchedName = adminEnvNames.find((name) =>
+      new RegExp(`^\\s*(?:export\\s+)?${name}\\s*=`).test(line),
+    );
+    if (!matchedName) {
+      updatedLines.push(line);
+      continue;
+    }
+    if (!written.has(matchedName)) {
+      updatedLines.push(`${matchedName}='${values.get(matchedName)}'`);
+      written.add(matchedName);
+    }
+  }
+
+  for (const name of adminEnvNames) {
+    if (written.has(name)) continue;
+    if (updatedLines.length > 0 && updatedLines.at(-1) !== "") {
+      updatedLines.push("");
+    }
+    updatedLines.push(`${name}='${values.get(name)}'`);
+  }
+
+  await writeFile(envPath, `${updatedLines.join("\n")}\n`, { mode: 0o600 });
+  await chmod(envPath, 0o600);
+}
+
 try {
   const password = await readHiddenPassword("Admin password (12+ characters): ");
   const confirmation = await readHiddenPassword("Repeat admin password: ");
@@ -76,9 +125,10 @@ try {
 
   const passwordHash = await hashPassword(password);
   const sessionSecret = randomBytes(32).toString("base64url");
-  stdout.write("Add these values to .env.local and Vercel:\n");
-  stdout.write(`ADMIN_PASSWORD_HASH=${passwordHash}\n`);
-  stdout.write(`ADMIN_SESSION_SECRET=${sessionSecret}\n`);
+  await saveAdminSecrets(passwordHash, sessionSecret);
+  stdout.write("Admin credentials saved to .env.local. The password was not printed.\n");
+  stdout.write("Restart the local dev server to load them.\n");
+  stdout.write("For Vercel, copy ADMIN_PASSWORD_HASH and ADMIN_SESSION_SECRET from .env.local into the project environment variables, then redeploy.\n");
 } catch (error) {
   stdout.write(`${error instanceof Error ? error.message : "Could not generate admin secrets."}\n`);
   process.exitCode = 1;

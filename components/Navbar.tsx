@@ -6,7 +6,7 @@ import mvmaly from "/mvmaly.png";
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const links = ['O nás', 'Akce', 'Fotogalerie', 'Videa', 'Kontakty', "Repertoár"];
-  
+
     return (
       <nav className="fixed w-full top-0 z-50 bg-black/30 backdrop-blur-md text-white shadow-md">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -37,6 +37,12 @@ export default function Navbar() {
                   {link}
                 </a>
               ))}
+              <a
+                href="/admin"
+                className="whitespace-nowrap text-sm font-medium tracking-wide text-stone-400 transition-colors hover:text-[#D90000]"
+              >
+                Správa webu
+              </a>
             </div>
   
             {/* Mobile menu button */}
@@ -98,10 +104,16 @@ export default function Navbar() {
                 {link}
                 </a>
             ))}
+            <a
+              href="/admin"
+              className="font-bold block px-3 py-2 rounded-md text-lg text-gray-300 hover:text-[#D90000] hover:bg-white/10"
+              onClick={() => setMobileOpen(false)}
+            >
+              Správa webu
+            </a>
             </div>
         </div>
         )}
       </nav>
     );
   }
-  

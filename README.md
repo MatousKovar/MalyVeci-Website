@@ -28,7 +28,7 @@ Run `npm run migrate:events` to import the current and future events and posters
 
 ## Admin login
 
-`/admin` accepts one shared admin password. Create its hash and a signing secret locally with `npm run admin:secrets`, then add the printed `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` values to `.env.local` and to the Vercel environment. The script asks for the password without showing it in the terminal. Keep both generated values private. Set them for Production and Preview only if those deployments should allow admin login.
+`/admin` accepts one shared admin password. Run `npm run admin:secrets` to choose it. The script hides the password while you type, writes its scrypt hash and a signing secret to `.env.local`, and never prints either value. Restart the dev server to load them. For Vercel, copy `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` from `.env.local` into the project environment variables, then redeploy. Add them to Production and Preview only if those deployments should allow admin login.
 
 The app stores only a scrypt password hash. After a successful login, it signs an HttpOnly, SameSite cookie that expires after 30 days. Future write actions should call `requireAdminSession()` from `src/lib/admin/session.ts` before changing data.
 
