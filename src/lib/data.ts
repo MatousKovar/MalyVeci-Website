@@ -18,6 +18,12 @@ export type Member = {name: string,
 }
 export const members: Member [] = [
   {
+      name: "Denisa Roubalová",
+      role: "Zpěv",
+      bio: "Hlavní hlas kapely a královna pódiové energie. Stará se o sociální sítě i vizuální styl kapely a na pódiu kombinuje zpěv s tancem, takže se publikum nikdy nenudí.",
+      image: roubalka,
+  },
+  {
     name: "Matouš Kovář",
     role: "Sólová kytara",
     bio: "Kapelník, zvukař a tahoun celé kapely. Řídí zkoušky i koncerty, dohlíží na zvuk a zároveň přidává kytarová sóla, která dávají našim vystoupením drive.",
@@ -28,12 +34,6 @@ export const members: Member [] = [
     role: "Rytmická kytara",
     bio: "Rytmická jistota a autor vizuálů kapely. Stará se o plakáty i grafiku, na pódiu přidává kytaru a vlastní nápady, které dodávají koncertům originální náboj.",
     image: jiri,
-  },
-  {
-    name: "Denisa Roubalová",
-    role: "Zpěv",
-    bio: "Hlavní hlas kapely a královna pódiové energie. Stará se o sociální sítě i vizuální styl kapely a na pódiu kombinuje zpěv s tancem, takže se publikum nikdy nenudí.",
-    image: roubalka,
   },
   {
     name: "Matyáš Fojtů",
