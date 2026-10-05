@@ -33,7 +33,9 @@ export default function EventsSection({
   
   if (selectedDate) {
     const dateId = format(selectedDate, "yyyy-MM-dd");
-    const element = document.getElementById(dateId);
+    const element = document.querySelector<HTMLElement>(
+      `[data-event-date="${dateId}"]`,
+    );
     
     if (element) {
       element.scrollIntoView({ 
@@ -83,18 +85,22 @@ export default function EventsSection({
               Akce se nepodařilo načíst. Zkuste to prosím později.
             </p>
           ) : events.length > 0 ? (
-            events.map((event) => (
-              <EventListItem
-                key={event.date}
-                title={event.title}
-                date={event.date}
-                location={event.location}
-                poster_location={event.poster_location}
-                description={event.description}
-                showPosterFunction={showPosterFunction}
-                isHighlighted={highlightedDate === event.date}
-              />
-            ))
+            events.map((event) => {
+              const eventKey = `${event.date}-${event.title}-${event.location}`;
+              return (
+                <EventListItem
+                  key={eventKey}
+                  eventKey={eventKey}
+                  title={event.title}
+                  date={event.date}
+                  location={event.location}
+                  poster_location={event.poster_location}
+                  description={event.description}
+                  showPosterFunction={showPosterFunction}
+                  isHighlighted={highlightedDate === event.date}
+                />
+              );
+            })
           ) : (
             <p className="p-6 text-stone-500 italic">
               Zatím tu nejsou žádné naplánované akce.

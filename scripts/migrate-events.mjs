@@ -42,7 +42,7 @@ function slug(value) {
 }
 
 function eventId(event) {
-  return `event-${event.date}-${slug(event.title)}`;
+  return `event-${event.date}-${slug(event.title)}-${slug(event.location)}`;
 }
 
 function eventIdentity(event) {
