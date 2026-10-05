@@ -91,7 +91,7 @@ Verdikt: dobrý kompromis, pokud změny probíhají párkrát měsíčně a ček
 
 Tady jsou tři odlišné požadavky, které se často směšují:
 
-- Automatická příprava při uploadu: zmenšit, převést na WebP, stlačit a odstranit EXIF. To zvládne Decap v prohlížeči nebo vlastní admin před uploadem.
+- Automatická příprava při uploadu: zmenšit, převést na WebP, zkomprimovat a odstranit EXIF. To zvládne Decap v prohlížeči nebo vlastní admin před uploadem.
 - Nedestruktivní ořez pro web: uložit originál a v editoru nastavit crop/hotspot. Tohle má dobře vyřešené Sanity.
 - Skutečný editor: ruční crop, otočení, flip, text a grafické overlaye. Pro to je vhodný Cloudinary Media Editor, který lze vložit do vlastního adminu. Free plán má 25 měsíčních kreditů; jeden kredit odpovídá 1 GB storage, 1 GB image bandwidth nebo 1000 transformací a spotřeba se sčítá. [Cloudinary Media Editor](https://cloudinary.com/documentation/media_editor), [Cloudinary billing](https://cloudinary.com/documentation/billing_and_plans), [Cloudinary pricing](https://cloudinary.com/pricing)
 
