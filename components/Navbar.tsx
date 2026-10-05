@@ -10,11 +10,11 @@ export default function Navbar() {
     return (
       <nav className="fixed w-full top-0 z-50 bg-black/30 backdrop-blur-md text-white shadow-md">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative flex h-16 items-center justify-between">
+          <div className="relative flex h-16 items-center">
             
   
             {/* Desktop menu */}
-            <div className="hidden sm:flex items-center space-x-8">
+            <div className="hidden flex-1 items-center space-x-8 sm:flex">
               <Image
                 src="/mvmaly.png" // path to your logo (in /public/logo.png)
                 alt="Logo"
@@ -40,13 +40,13 @@ export default function Navbar() {
             </div>
             <a
               href="/admin"
-              className="hidden sm:inline-flex shrink-0 items-center whitespace-nowrap text-sm font-medium tracking-wide text-stone-400 transition-colors hover:text-[#D90000]"
+              className="ml-auto inline-flex shrink-0 items-center whitespace-nowrap rounded-md border border-stone-500/70 px-3 py-2 text-sm font-medium tracking-wide text-stone-300 transition-colors hover:border-[#D90000] hover:text-[#D90000]"
             >
               Správa webu
             </a>
   
             {/* Mobile menu button */}
-            <div className="sm:hidden flex items-center justify-between w-full px-4">              
+            <div className="sm:hidden flex flex-1 items-center gap-4 px-4">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
                 className="p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#D90000]"
@@ -104,13 +104,6 @@ export default function Navbar() {
                 {link}
                 </a>
             ))}
-            <a
-              href="/admin"
-              className="font-bold block px-3 py-2 rounded-md text-lg text-gray-300 hover:text-[#D90000] hover:bg-white/10"
-              onClick={() => setMobileOpen(false)}
-            >
-              Správa webu
-            </a>
             </div>
         </div>
         )}
