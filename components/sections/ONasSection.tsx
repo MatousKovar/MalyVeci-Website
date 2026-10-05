@@ -75,11 +75,6 @@ export default function ONasSection() {
               nevydržíme stát na místě.
             </li>
             <li>
-              <strong>Levnější než konkurence</strong> - hudba pro nás nikdy
-              nebyla o penězích, proto vyjdeme vstříc i pořadatelům menších
-              akcí.{" "}
-            </li>
-            <li>
               <strong>Ctíme originál</strong> - Oproti většině zábavových kapel
               se snažíme přiblížit se co nejvíce originálním nahrávkám. U nás to
               není jen o tom zahrát pár akordů a zazpívat stejná slova.{" "}

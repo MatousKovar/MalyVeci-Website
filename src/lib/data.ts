@@ -73,15 +73,16 @@ export const events : Event[] = [
   // { title: "Pivní slavnosti", date: "2026-07-25", location: "Stodola, Horažďovice", description: "Tradiční pivní slavnosti ve Stodole, kde budeme hrát celý večer." },
   // { title: "Svatba", date: "2026-08-08", location: "Zahorčice" },
   // { title: "Pouť", date: "2026-08-09", location: "Volyně" },
-  { title: "Slunce ve skle", date: "2026-09-19", location: "Plzeň, Purkmistr" },
+  // { title: "Slunce ve skle", date: "2026-09-19", location: "Plzeň, Purkmistr" },
   { title: "Posvícenská zábava", date: "2026-10-17", location: "Doubravice", description: "Podrobnosti brzy..." },
-  { title: "Rezervace", date: "2026-10-24", location: "Hoštice", description: "Podrobnosti brzy..." },
-  { title: "Rezervace", date: "2026-10-29", location: "Plzeň", description: "Podrobnosti brzy..." },
+  { title: "Oslava narozenin", date: "2026-10-24", location: "Hoštice", description: "Podrobnosti brzy..." },
+  { title: "Anděl Music Bar", date: "2026-10-29", location: "Plzeň", description: "Zahrajeme společně s kapelou The Flip Flops",poster_location: "/andel.PNG" },
   { title: "Maturitní ples", date: "2026-11-28", location: "Mariánské Lázně" },
   { title: "Firemní večírek", date: "2026-12-11", location: "Radošovice" },
   { title: "Hradešický ples", date: "2026-12-12", location: "Horažďovice" },
   { title: "Maturitní ples", date: "2027-01-29", location: "Strakonice" },
   { title: "Maturitní ples", date: "2027-02-20", location: "Strakonice" },
+  { title: "Pouťová zábava", date: "2027-0ý-2č", location: "Čejetice" },
 ];
 
 
