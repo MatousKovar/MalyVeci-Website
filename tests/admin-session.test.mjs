@@ -1,0 +1,57 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { randomBytes } from "node:crypto";
+import {
+  hashPassword,
+  isPasswordHashValid,
+  isSessionSecretValid,
+  SESSION_DURATION_MS,
+  signAdminSession,
+  verifyAdminSession,
+  verifyPassword,
+} from "../src/lib/admin/session-crypto.mjs";
+
+test("password hashes verify the original password and reject other inputs", async () => {
+  const password = "sample-admin-password";
+  const encodedHash = await hashPassword(password);
+
+  assert.equal(isPasswordHashValid(encodedHash), true);
+  assert.equal(await verifyPassword(password, encodedHash), true);
+  assert.equal(await verifyPassword("short", encodedHash), false);
+  assert.equal(await verifyPassword("another-password", encodedHash), false);
+  assert.equal(await verifyPassword(password, "not-a-hash"), false);
+});
+
+test("password hashing rejects short and oversized passwords", async () => {
+  await assert.rejects(hashPassword("short"));
+  await assert.rejects(hashPassword("😀😀😀"));
+  await assert.rejects(hashPassword("x".repeat(1025)));
+});
+
+test("signed sessions are accepted until their 30-day expiry", () => {
+  const secret = randomBytes(32).toString("base64url");
+  const issuedAt = Date.UTC(2026, 0, 1);
+  const token = signAdminSession(secret, issuedAt);
+
+  assert.equal(isSessionSecretValid(secret), true);
+  assert.equal(verifyAdminSession(secret, token, issuedAt), true);
+  assert.equal(
+    verifyAdminSession(secret, token, issuedAt + SESSION_DURATION_MS - 1000),
+    true,
+  );
+  assert.equal(
+    verifyAdminSession(secret, token, issuedAt + SESSION_DURATION_MS),
+    false,
+  );
+});
+
+test("signed sessions reject altered tokens and wrong secrets", () => {
+  const secret = randomBytes(32).toString("base64url");
+  const wrongSecret = randomBytes(32).toString("base64url");
+  const token = signAdminSession(secret);
+  const [payload, signature] = token.split(".");
+
+  assert.equal(verifyAdminSession(wrongSecret, token), false);
+  assert.equal(verifyAdminSession(secret, `${payload}.${"A".repeat(43)}`), false);
+  assert.equal(verifyAdminSession(secret, "not-a-session"), false);
+});

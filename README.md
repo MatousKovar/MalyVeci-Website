@@ -26,6 +26,12 @@ The homepage reads published events from Sanity. Set `NEXT_PUBLIC_SANITY_PROJECT
 
 Run `npm run migrate:events` to import the current and future events and posters from `src/lib/event-seed.json` and `public/`. The import uses the Europe/Prague date, keeps existing matching documents, and can be run again safely.
 
+## Admin login
+
+`/admin` accepts one shared admin password. Create its hash and a signing secret locally with `npm run admin:secrets`, then add the printed `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` values to `.env.local` and to the Vercel environment. The script asks for the password without showing it in the terminal. Keep both generated values private. Set them for Production and Preview only if those deployments should allow admin login.
+
+The app stores only a scrypt password hash. After a successful login, it signs an HttpOnly, SameSite cookie that expires after 30 days. Future write actions should call `requireAdminSession()` from `src/lib/admin/session.ts` before changing data.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
