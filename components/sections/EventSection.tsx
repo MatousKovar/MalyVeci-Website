@@ -1,20 +1,24 @@
 "use client";
-import { events } from "@/lib/data"; // Import the data
-import EventCard from "@/../components/ui/EventCard"; // Import the look
 import { Calendar } from "@/../components/ui/calendar";
-import { useState, useRef } from "react"; // Přidán useRef, pokud by bylo potřeba, ale vystačíme si s useState
+import { useState } from "react";
 import EventListItem from "../ui/EventListItem";
 import { format } from "date-fns/format";
+import { parseISO } from "date-fns/parseISO";
 import { cs } from "date-fns/locale";
+import type { Event } from "@/lib/events";
 
 
 /**Defining data type of input function to EventsSection. Function is passed poster_location and shows popup. Defined in page.tsx */
 type EventsSectionProps = {
+  events: Event[];
+  hasError: boolean;
   showPosterFunction: (src: string) => void;
 };
 
 
 export default function EventsSection({
+  events,
+  hasError,
   showPosterFunction,
 }: EventsSectionProps) {
 
@@ -23,7 +27,7 @@ export default function EventsSection({
   const [highlightedDate, setHighlightedDate] = useState<string | null>(null);
 
   // logika pro propojeni kalendare s listem vpravo
-  const eventDates = events.map(event => new Date(event.date));
+  const eventDates = events.map((event) => parseISO(event.date));
   const handleDateSelect = (selectedDate: Date | undefined) => {
   setDate(selectedDate);
   
@@ -74,10 +78,14 @@ export default function EventsSection({
 
         <div className="flex flex-col border border-stone-800 rounded-lg p-6 bg-stone-900/50 text-white md:justify-start">
           <div className="flex flex-col max-h-[500px] overflow-y-auto custom-scrollbar z-10">
-          {events.length > 0 ? (
-            events.map((event, index) => (
+          {hasError ? (
+            <p className="p-6 text-stone-300" role="alert">
+              Akce se nepodařilo načíst. Zkuste to prosím později.
+            </p>
+          ) : events.length > 0 ? (
+            events.map((event) => (
               <EventListItem
-                key={index}
+                key={event.date}
                 title={event.title}
                 date={event.date}
                 location={event.location}
@@ -91,7 +99,7 @@ export default function EventsSection({
             <p className="p-6 text-stone-500 italic">
               Zatím tu nejsou žádné naplánované akce.
             </p>
-          )}          
+          )}
         </div>
 
         </div>

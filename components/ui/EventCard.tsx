@@ -1,5 +1,5 @@
 import React from "react";
-import { Event } from "@/lib/data";
+import type { Event } from "@/lib/events";
 
 interface EventCardProps extends Event {
   showPosterFunction: (src: string) => void;

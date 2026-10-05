@@ -20,6 +20,12 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Events in Sanity
+
+The homepage reads published events from Sanity. Set `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` in `.env.local` for local development and in the production environment. The write token is only needed for imports. Keep `SANITY_API_WRITE_TOKEN` private and never prefix it with `NEXT_PUBLIC_`.
+
+Run `npm run migrate:events` to import the current and future events and posters from `src/lib/event-seed.json` and `public/`. The import uses the Europe/Prague date, keeps existing matching documents, and can be run again safely.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "gallery": "node scripts/gen-gallery.mjs",
+    "migrate:events": "node --env-file=.env.local scripts/migrate-events.mjs",
     "predev": "node scripts/gen-gallery.mjs",
     "prebuild": "node scripts/gen-gallery.mjs",
     "dev": "next dev --turbopack",
@@ -12,6 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sanity/client": "^8.9.0",
     "@tailwindcss/cli": "^4.1.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

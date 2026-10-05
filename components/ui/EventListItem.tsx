@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Event } from "@/lib/data";
+import { parseISO } from "date-fns/parseISO";
+import type { Event } from "@/lib/events";
 
 interface EventListItemProps extends Event {
   showPosterFunction: (src: string) => void;
@@ -20,7 +21,7 @@ isHighlighted = false,
   // Stav pro sledování, zda je detail akce rozbalený
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const dateObj = new Date(date);
+  const dateObj = parseISO(date);
   const day = !isNaN(dateObj.getDate()) ? dateObj.getDate() : "??";
   const month = !isNaN(dateObj.getMonth())
     ? dateObj.toLocaleString("cs-CZ", { month: "short" }).replace(".", "")
