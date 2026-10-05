@@ -12,20 +12,23 @@ import {
 } from "../src/lib/admin/session-crypto.mjs";
 
 test("password hashes verify the original password and reject other inputs", async () => {
-  const password = "sample-admin-password";
+  const password = "x";
   const encodedHash = await hashPassword(password);
 
   assert.equal(isPasswordHashValid(encodedHash), true);
   assert.equal(await verifyPassword(password, encodedHash), true);
-  assert.equal(await verifyPassword("short", encodedHash), false);
+  assert.equal(await verifyPassword("y", encodedHash), false);
   assert.equal(await verifyPassword("another-password", encodedHash), false);
   assert.equal(await verifyPassword(password, "not-a-hash"), false);
+  assert.equal(await verifyPassword("", encodedHash), false);
 });
 
-test("password hashing rejects short and oversized passwords", async () => {
-  await assert.rejects(hashPassword("short"));
-  await assert.rejects(hashPassword("😀😀😀"));
-  await assert.rejects(hashPassword("x".repeat(1025)));
+test("password hashing accepts passwords longer than 1024 bytes", async () => {
+  const password = "😀".repeat(513);
+  const encodedHash = await hashPassword(password);
+
+  assert.equal(await verifyPassword(password, encodedHash), true);
+  await assert.rejects(hashPassword(""));
 });
 
 test("signed sessions are accepted until their 30-day expiry", () => {

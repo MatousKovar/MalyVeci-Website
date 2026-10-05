@@ -33,7 +33,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           type="password"
           autoComplete="current-password"
           required
-          maxLength={1024}
           className="w-full rounded-md border border-stone-600 bg-stone-900 px-3 py-2 text-white outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30"
         />
         {message && (

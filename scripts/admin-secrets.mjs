@@ -117,7 +117,7 @@ async function saveAdminSecrets(passwordHash, sessionSecret) {
 }
 
 try {
-  const password = await readHiddenPassword("Admin password (12+ characters): ");
+  const password = await readHiddenPassword("Admin password: ");
   const confirmation = await readHiddenPassword("Repeat admin password: ");
   if (password !== confirmation) {
     throw new Error("The passwords did not match.");

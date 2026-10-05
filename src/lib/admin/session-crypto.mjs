@@ -13,8 +13,6 @@ const SCRYPT_BLOCK_SIZE = 8;
 const SCRYPT_PARALLELIZATION = 1;
 const PASSWORD_SALT_BYTES = 16;
 const PASSWORD_KEY_BYTES = 64;
-const PASSWORD_MIN_CHARACTERS = 12;
-const PASSWORD_MAX_BYTES = 1024;
 const SESSION_SECRET_BYTES = 32;
 export const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
 const SCRYPT_OPTIONS = Object.freeze({
@@ -25,11 +23,7 @@ const SCRYPT_OPTIONS = Object.freeze({
 });
 
 function isValidAdminPassword(password) {
-  return (
-    typeof password === "string" &&
-    Array.from(password).length >= PASSWORD_MIN_CHARACTERS &&
-    Buffer.byteLength(password, "utf8") <= PASSWORD_MAX_BYTES
-  );
+  return typeof password === "string" && password.length > 0;
 }
 
 function parsePasswordHash(encodedHash) {
@@ -85,7 +79,7 @@ export function isSessionSecretValid(secret) {
 
 export async function hashPassword(password) {
   if (!isValidAdminPassword(password)) {
-    throw new Error("Admin password must be at least 12 characters and no more than 1024 UTF-8 bytes.");
+    throw new Error("Admin password must not be empty.");
   }
 
   const salt = randomBytes(PASSWORD_SALT_BYTES);
