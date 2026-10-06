@@ -15,14 +15,15 @@ import GallerySection from "../../components/sections/GallerySection";
 import VideosSection from "../../components/sections/VideosSection";
 import RepertoarSection from "../../components/sections/RepertoarSection";
 import ContactsSection from "../../components/sections/ContactsSection";
-import type { Event } from "@/lib/events";
+import type { ManagedEvent } from "@/lib/events";
 
 type HomePageProps = {
-  events: Event[];
+  events: ManagedEvent[];
   eventsError: boolean;
+  isAdmin: boolean;
 };
 
-export default function HomePage({ events, eventsError }: HomePageProps) {
+export default function HomePage({ events, eventsError, isAdmin }: HomePageProps) {
   const [poster, setPoster] = useState<string | null>(null);
   const [blur, setBlur] = useState(0);
 
@@ -65,6 +66,7 @@ export default function HomePage({ events, eventsError }: HomePageProps) {
         <EventSection
           events={events}
           hasError={eventsError}
+          isAdmin={isAdmin}
           showPosterFunction={(src) => setPoster(src)}
         />
         <GallerySection />

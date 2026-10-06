@@ -5,3 +5,7 @@ export type Event = {
   poster_location?: string;
   description?: string;
 };
+
+export type ManagedEvent = Event & {
+  id: string;
+};

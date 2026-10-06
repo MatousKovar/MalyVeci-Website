@@ -18,3 +18,12 @@ export function getSanityClient() {
     perspective: "published",
   });
 }
+
+export function getSanityWriteClient() {
+  const token = process.env.SANITY_API_WRITE_TOKEN;
+  if (!token) {
+    throw new Error("SANITY_API_WRITE_TOKEN must be configured to edit events.");
+  }
+
+  return getSanityClient().withConfig({ token, useCdn: false });
+}
