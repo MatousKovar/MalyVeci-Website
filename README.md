@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Events in Sanity
 
-The homepage reads published events from Sanity. Set `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` in `.env.local` for local development and in the production environment. The server uses `SANITY_API_WRITE_TOKEN` for event imports and admin edits. Keep it private and never prefix it with `NEXT_PUBLIC_`.
+The homepage reads published events from Sanity. Set `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` in `.env.local` and in the production environment. Set `SANITY_API_WRITE_TOKEN` in both environments for event imports and admin edits. Keep it private and never prefix it with `NEXT_PUBLIC_`.
 
 Run `npm run migrate:events` to import the current and future events and posters from `src/lib/event-seed.json` and `public/`. The import uses the Europe/Prague date, keeps existing matching documents, and can be run again safely.
 

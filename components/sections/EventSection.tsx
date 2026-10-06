@@ -14,6 +14,7 @@ type EventsSectionProps = {
   events: ManagedEvent[];
   hasError: boolean;
   isAdmin: boolean;
+  today: string;
   showPosterFunction: (src: string) => void;
 };
 
@@ -22,6 +23,7 @@ export default function EventsSection({
   events,
   hasError,
   isAdmin,
+  today,
   showPosterFunction,
 }: EventsSectionProps) {
 
@@ -75,7 +77,11 @@ export default function EventsSection({
         )}
       </div>
       {isAdmin && isEditorOpen && (
-        <EventEditor events={events} onClose={() => setIsEditorOpen(false)} />
+        <EventEditor
+          events={events}
+          today={today}
+          onClose={() => setIsEditorOpen(false)}
+        />
       )}
       <div id="calendar_wrapper" className="grid grid-cols-1 md:grid-cols-2 mx-auto max-w-7xl px-4 gap-8">
 

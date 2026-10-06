@@ -21,9 +21,15 @@ type HomePageProps = {
   events: ManagedEvent[];
   eventsError: boolean;
   isAdmin: boolean;
+  today: string;
 };
 
-export default function HomePage({ events, eventsError, isAdmin }: HomePageProps) {
+export default function HomePage({
+  events,
+  eventsError,
+  isAdmin,
+  today,
+}: HomePageProps) {
   const [poster, setPoster] = useState<string | null>(null);
   const [blur, setBlur] = useState(0);
 
@@ -67,6 +73,7 @@ export default function HomePage({ events, eventsError, isAdmin }: HomePageProps
           events={events}
           hasError={eventsError}
           isAdmin={isAdmin}
+          today={today}
           showPosterFunction={(src) => setPoster(src)}
         />
         <GallerySection />

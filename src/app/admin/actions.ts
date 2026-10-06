@@ -66,7 +66,6 @@ export async function updateEvent(
     return {
       ...result,
       message: "Změny akce jsou uložené.",
-      revision: Date.now(),
     };
   } catch (error) {
     console.error(

@@ -1,11 +1,23 @@
 const requiredFieldsError = {
   status: "error",
-  message: "Vyplňte název, platné datum a místo akce.",
+  message: "Zadejte název, dnešní nebo pozdější datum a místo akce.",
 };
 
 function readText(formData, name) {
   const value = formData.get(name);
   return typeof value === "string" ? value.trim() : "";
+}
+
+export function getTodayInPrague(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const part = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+
+  return `${part.year}-${part.month}-${part.day}`;
 }
 
 function isCalendarDate(value) {
@@ -30,8 +42,9 @@ export async function updateManagedEvent(formData, dependencies) {
   const date = readText(formData, "date");
   const location = readText(formData, "location");
   const description = readText(formData, "description");
+  const today = dependencies.getTodayInPrague?.() ?? getTodayInPrague();
 
-  if (!id || !title || !isCalendarDate(date) || !location) {
+  if (!id || !title || !isCalendarDate(date) || date < today || !location) {
     return requiredFieldsError;
   }
 

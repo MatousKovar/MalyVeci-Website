@@ -1,5 +1,6 @@
 import HomePage from "@/app/HomePage";
 import AdminToolbar from "@/app/admin/AdminToolbar";
+import { getTodayInPrague } from "@/lib/admin/event-update.mjs";
 import type { ManagedEvent } from "@/lib/events";
 import { isAdminAuthenticated } from "@/lib/admin/session";
 import { fetchEvents } from "@/lib/sanity/events";
@@ -23,7 +24,12 @@ export default async function Home() {
 
   return (
     <>
-      <HomePage events={events} eventsError={eventsError} isAdmin={isAdmin} />
+      <HomePage
+        events={events}
+        eventsError={eventsError}
+        isAdmin={isAdmin}
+        today={getTodayInPrague()}
+      />
       {isAdmin && <AdminToolbar />}
     </>
   );

@@ -1,5 +1,4 @@
-import { getSanityClient } from "@/lib/sanity/client";
-import { getSanityWriteClient } from "@/lib/sanity/client";
+import { getSanityClient, getSanityWriteClient } from "@/lib/sanity/client";
 import type { Event, ManagedEvent } from "@/lib/events";
 import type { EventUpdateFields } from "@/lib/admin/event-update.mjs";
 
@@ -50,17 +49,13 @@ function toManagedEvent(value: unknown): ManagedEvent | undefined {
   return { id: event.id, ...parsedEvent };
 }
 
-async function fetchSanityEvents(): Promise<ManagedEvent[]> {
+export async function fetchEvents(): Promise<ManagedEvent[]> {
   const client = getSanityClient().withConfig({ useCdn: false });
   const events = await client.fetch<unknown[]>(eventsQuery);
   return events.flatMap((event) => {
     const parsedEvent = toManagedEvent(event);
     return parsedEvent ? [parsedEvent] : [];
   });
-}
-
-export async function fetchEvents(): Promise<ManagedEvent[]> {
-  return fetchSanityEvents();
 }
 
 const eventByIdQuery = `*[_type == "event" && _id == $id][0]{_id, date}`;

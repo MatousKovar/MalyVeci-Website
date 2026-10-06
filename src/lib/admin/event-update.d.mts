@@ -20,12 +20,11 @@ export type EventUpdateResult =
   | EventUpdateError;
 
 export type EventUpdateState =
-  | (EventUpdateError & { revision?: number })
+  | EventUpdateError
   | {
       status: "success";
       message: string;
       event: ManagedEvent;
-      revision: number;
     }
   | { status: "idle" };
 
@@ -39,9 +38,12 @@ export type EventUpdateDependencies = {
     excludedId: string,
   ) => Promise<Pick<ManagedEvent, "id"> | null | undefined>;
   updateEvent: (id: string, fields: EventUpdateFields) => Promise<void>;
+  getTodayInPrague?: () => string;
 };
 
 export function updateManagedEvent(
   formData: FormData,
   dependencies: EventUpdateDependencies,
 ): Promise<EventUpdateResult>;
+
+export function getTodayInPrague(now?: Date): string;

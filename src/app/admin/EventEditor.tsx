@@ -7,6 +7,7 @@ import { updateEvent } from "./actions";
 
 type EventEditorProps = {
   events: ManagedEvent[];
+  today: string;
   onClose: () => void;
 };
 
@@ -19,6 +20,7 @@ type EventFields = {
 };
 
 const initialState = { status: "idle" } as const;
+const nonWhitespacePattern = String.raw`.*\S.*`;
 
 function getFields(event: ManagedEvent): EventFields {
   return {
@@ -30,7 +32,13 @@ function getFields(event: ManagedEvent): EventFields {
   };
 }
 
-function EventEditForm({ event }: { event: ManagedEvent }) {
+function EventEditForm({
+  event,
+  today,
+}: {
+  event: ManagedEvent;
+  today: string;
+}) {
   const [state, formAction, isPending] = useActionState(updateEvent, initialState);
   const [fields, setFields] = useState(() => getFields(event));
   const router = useRouter();
@@ -52,6 +60,8 @@ function EventEditForm({ event }: { event: ManagedEvent }) {
           name="title"
           type="text"
           value={fields.title}
+          pattern={nonWhitespacePattern}
+          title="Zadejte alespoň jeden znak kromě mezer."
           onChange={(event) =>
             setFields((current) => ({ ...current, title: event.target.value }))
           }
@@ -65,6 +75,7 @@ function EventEditForm({ event }: { event: ManagedEvent }) {
         <input
           name="date"
           type="date"
+          min={today}
           value={fields.date}
           onChange={(event) =>
             setFields((current) => ({ ...current, date: event.target.value }))
@@ -80,6 +91,8 @@ function EventEditForm({ event }: { event: ManagedEvent }) {
           name="location"
           type="text"
           value={fields.location}
+          pattern={nonWhitespacePattern}
+          title="Zadejte alespoň jeden znak kromě mezer."
           onChange={(event) =>
             setFields((current) => ({ ...current, location: event.target.value }))
           }
@@ -127,7 +140,7 @@ function EventEditForm({ event }: { event: ManagedEvent }) {
   );
 }
 
-export default function EventEditor({ events, onClose }: EventEditorProps) {
+export default function EventEditor({ events, today, onClose }: EventEditorProps) {
   const sortedEvents = useMemo(
     () => [...events].sort((first, second) => first.date.localeCompare(second.date)),
     [events],
@@ -178,7 +191,9 @@ export default function EventEditor({ events, onClose }: EventEditorProps) {
               ))}
             </select>
           </label>
-          {selectedEvent && <EventEditForm key={selectedId} event={selectedEvent} />}
+          {selectedEvent && (
+            <EventEditForm key={selectedId} event={selectedEvent} today={today} />
+          )}
         </>
       ) : (
         <p className="text-sm text-stone-300">Zatím nejsou žádné akce k úpravě.</p>
