@@ -1,6 +1,9 @@
 import { getSanityClient, getSanityWriteClient } from "@/lib/sanity/client";
 import type { Event, ManagedEvent } from "@/lib/events";
-import type { EventUpdateFields } from "@/lib/admin/event-update.mjs";
+import type {
+  EventCreateFields,
+  EventUpdateFields,
+} from "@/lib/admin/event-update.mjs";
 
 const eventsQuery = `*[_type == "event" && defined(date)] | order(date asc) {
   "id": _id,
@@ -99,4 +102,20 @@ export async function updateSanityEvent(id: string, fields: EventUpdateFields) {
   }
 
   await patch.commit();
+}
+
+export async function createSanityEvent(fields: EventCreateFields) {
+  const document = await getSanityWriteClient().create({
+    _type: "event",
+    title: fields.title,
+    date: fields.date,
+    location: fields.location,
+    ...(fields.description ? { description: fields.description } : {}),
+  });
+
+  return document._id;
+}
+
+export async function deleteSanityEvent(id: string) {
+  await getSanityWriteClient().delete(id);
 }

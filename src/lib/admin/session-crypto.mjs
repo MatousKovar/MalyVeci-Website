@@ -29,7 +29,10 @@ function isValidAdminPassword(password) {
 function parsePasswordHash(encodedHash) {
   if (typeof encodedHash !== "string") return undefined;
 
-  const parts = encodedHash.split("$");
+  const delimiter = encodedHash.startsWith(`${PASSWORD_HASH_ALGORITHM}$`)
+    ? "$"
+    : ":";
+  const parts = encodedHash.split(delimiter);
   if (parts.length !== 6) return undefined;
 
   const [algorithm, cost, blockSize, parallelization, saltText, keyText] = parts;
@@ -92,7 +95,7 @@ export async function hashPassword(password) {
     SCRYPT_PARALLELIZATION,
     salt.toString("base64url"),
     key.toString("base64url"),
-  ].join("$");
+  ].join(":");
 }
 
 export async function verifyPassword(password, encodedHash) {

@@ -4,6 +4,21 @@ export type GalleryImage = { src: string; width: number; height: number };
 
 export const galleryImages: GalleryImage[] = [
   {
+    "src": "/gallery/_DSC7878.jpg",
+    "width": 6000,
+    "height": 4000
+  },
+  {
+    "src": "/gallery/_DSC7914.jpg",
+    "width": 6000,
+    "height": 4000
+  },
+  {
+    "src": "/gallery/_DSC7954.jpg",
+    "width": 4000,
+    "height": 6000
+  },
+  {
     "src": "/gallery/_MG_9137.JPG",
     "width": 4080,
     "height": 2720
@@ -39,12 +54,12 @@ export const galleryImages: GalleryImage[] = [
     "height": 1350
   },
   {
-    "src": "/gallery/4.PNG",
-    "width": 1080,
-    "height": 1350
+    "src": "/gallery/3K1A9996.jpg",
+    "width": 6523,
+    "height": 4351
   },
   {
-    "src": "/gallery/5.PNG",
+    "src": "/gallery/4.PNG",
     "width": 1080,
     "height": 1350
   },
@@ -99,14 +114,64 @@ export const galleryImages: GalleryImage[] = [
     "height": 2048
   },
   {
-    "src": "/gallery/15.jpeg",
-    "width": 2317,
-    "height": 3090
+    "src": "/gallery/28e8d434efa8958bd82bce69dd325f63.jpeg",
+    "width": 1152,
+    "height": 2048
+  },
+  {
+    "src": "/gallery/93107b7e119ca6a6688ff59a161789e3.jpeg",
+    "width": 2048,
+    "height": 1536
   },
   {
     "src": "/gallery/galeriexx.jpg",
     "width": 2720,
     "height": 3627
+  },
+  {
+    "src": "/gallery/IMG_0405.jpeg",
+    "width": 4032,
+    "height": 3024
+  },
+  {
+    "src": "/gallery/IMG_0556.jpeg",
+    "width": 2417,
+    "height": 3021
+  },
+  {
+    "src": "/gallery/IMG_1879.JPG",
+    "width": 3222,
+    "height": 4833
+  },
+  {
+    "src": "/gallery/IMG_1882.JPG",
+    "width": 3251,
+    "height": 4876
+  },
+  {
+    "src": "/gallery/IMG_1883.JPG",
+    "width": 3251,
+    "height": 4876
+  },
+  {
+    "src": "/gallery/IMG_1886.JPG",
+    "width": 3638,
+    "height": 5457
+  },
+  {
+    "src": "/gallery/IMG_1888.JPG",
+    "width": 6048,
+    "height": 4032
+  },
+  {
+    "src": "/gallery/IMG_1892.JPG",
+    "width": 3829,
+    "height": 5743
+  },
+  {
+    "src": "/gallery/IMG_3532.jpeg",
+    "width": 4032,
+    "height": 3024
   },
   {
     "src": "/gallery/IMG_5344.jpeg",

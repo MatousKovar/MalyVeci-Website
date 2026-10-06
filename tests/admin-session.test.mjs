@@ -16,11 +16,21 @@ test("password hashes verify the original password and reject other inputs", asy
   const encodedHash = await hashPassword(password);
 
   assert.equal(isPasswordHashValid(encodedHash), true);
+  assert.equal(encodedHash.includes("$"), false);
   assert.equal(await verifyPassword(password, encodedHash), true);
   assert.equal(await verifyPassword("y", encodedHash), false);
   assert.equal(await verifyPassword("another-password", encodedHash), false);
   assert.equal(await verifyPassword(password, "not-a-hash"), false);
   assert.equal(await verifyPassword("", encodedHash), false);
+});
+
+test("existing dollar-delimited password hashes remain valid", async () => {
+  const password = "legacy-password";
+  const encodedHash = await hashPassword(password);
+  const legacyHash = encodedHash.replaceAll(":", "$");
+
+  assert.equal(isPasswordHashValid(legacyHash), true);
+  assert.equal(await verifyPassword(password, legacyHash), true);
 });
 
 test("password hashing accepts passwords longer than 1024 bytes", async () => {

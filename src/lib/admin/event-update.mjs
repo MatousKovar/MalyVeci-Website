@@ -84,3 +84,74 @@ export async function updateManagedEvent(formData, dependencies) {
     },
   };
 }
+
+export async function createManagedEvent(formData, dependencies) {
+  if (!(await dependencies.isAuthorized())) {
+    return {
+      status: "error",
+      message: "Přihlášení správce vypršelo. Přihlaste se znovu.",
+    };
+  }
+
+  const title = readText(formData, "title");
+  const date = readText(formData, "date");
+  const location = readText(formData, "location");
+  const description = readText(formData, "description");
+  const today = dependencies.getTodayInPrague?.() ?? getTodayInPrague();
+
+  if (!title || !isCalendarDate(date) || date < today || !location) {
+    return requiredFieldsError;
+  }
+
+  const conflictingEvent = await dependencies.findOtherEventOnDate(date, "");
+  if (conflictingEvent) {
+    return {
+      status: "error",
+      message: "Na vybraný den už je naplánovaná jiná akce.",
+    };
+  }
+
+  const fields = {
+    title,
+    date,
+    location,
+    description: description || null,
+  };
+  const id = await dependencies.createEvent(fields);
+
+  return {
+    status: "success",
+    event: {
+      id,
+      title,
+      date,
+      location,
+      ...(description ? { description } : {}),
+    },
+  };
+}
+
+export async function deleteManagedEvent(formData, dependencies) {
+  if (!(await dependencies.isAuthorized())) {
+    return {
+      status: "error",
+      message: "Přihlášení správce vypršelo. Přihlaste se znovu.",
+    };
+  }
+
+  const id = readText(formData, "id");
+  if (!id) {
+    return { status: "error", message: "Vyberte akci, kterou chcete odebrat." };
+  }
+
+  const currentEvent = await dependencies.findEventById(id);
+  if (!currentEvent) {
+    return {
+      status: "error",
+      message: "Vybraná akce už neexistuje. Obnovte stránku a vyberte ji znovu.",
+    };
+  }
+
+  await dependencies.deleteEvent(id);
+  return { status: "success", id };
+}

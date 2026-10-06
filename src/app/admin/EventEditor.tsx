@@ -1,58 +1,74 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import {
+  useActionState,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import type { ManagedEvent } from "@/lib/events";
-import { updateEvent } from "./actions";
+import type { EventEditorActionState } from "@/lib/admin/event-update.mjs";
+import { createEvent, deleteEvent, updateEvent } from "./actions";
 
 type EventEditorProps = {
   events: ManagedEvent[];
   today: string;
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 type EventFields = {
-  id: string;
   title: string;
   date: string;
   location: string;
   description: string;
 };
 
-const initialState = { status: "idle" } as const;
+type EventAction = (
+  previousState: EventEditorActionState,
+  formData: FormData,
+) => Promise<EventEditorActionState>;
+
+const initialState: EventEditorActionState = { status: "idle" };
 const nonWhitespacePattern = String.raw`.*\S.*`;
 
-function getFields(event: ManagedEvent): EventFields {
+function getFields(event?: ManagedEvent): EventFields {
   return {
-    id: event.id,
-    title: event.title,
-    date: event.date,
-    location: event.location,
-    description: event.description ?? "",
+    title: event?.title ?? "",
+    date: event?.date ?? "",
+    location: event?.location ?? "",
+    description: event?.description ?? "",
   };
 }
 
-function EventEditForm({
+function EventForm({
   event,
   today,
+  action,
+  submitLabel,
+  onCancel,
+  onSaved,
 }: {
-  event: ManagedEvent;
+  event?: ManagedEvent;
   today: string;
+  action: EventAction;
+  submitLabel: string;
+  onCancel?: () => void;
+  onSaved: (event?: ManagedEvent) => void;
 }) {
-  const [state, formAction, isPending] = useActionState(updateEvent, initialState);
+  const [state, formAction, isPending] = useActionState(action, initialState);
   const [fields, setFields] = useState(() => getFields(event));
-  const router = useRouter();
 
   useEffect(() => {
     if (state.status !== "success") return;
-
-    setFields(getFields(state.event));
-    router.refresh();
-  }, [router, state]);
+    if (state.event) setFields(getFields(state.event));
+    onSaved(state.event);
+  }, [onSaved, state]);
 
   return (
     <form action={formAction} className="grid gap-4 sm:grid-cols-2">
-      <input type="hidden" name="id" value={fields.id} readOnly />
+      {event && <input type="hidden" name="id" value={event.id} readOnly />}
 
       <label className="grid gap-1 text-sm text-stone-300">
         Název
@@ -62,8 +78,8 @@ function EventEditForm({
           value={fields.title}
           pattern={nonWhitespacePattern}
           title="Zadejte alespoň jeden znak kromě mezer."
-          onChange={(event) =>
-            setFields((current) => ({ ...current, title: event.target.value }))
+          onChange={(inputEvent) =>
+            setFields((current) => ({ ...current, title: inputEvent.target.value }))
           }
           required
           className="rounded-md border border-stone-700 bg-stone-950 px-3 py-2 text-white outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30"
@@ -77,8 +93,8 @@ function EventEditForm({
           type="date"
           min={today}
           value={fields.date}
-          onChange={(event) =>
-            setFields((current) => ({ ...current, date: event.target.value }))
+          onChange={(inputEvent) =>
+            setFields((current) => ({ ...current, date: inputEvent.target.value }))
           }
           required
           className="rounded-md border border-stone-700 bg-stone-950 px-3 py-2 text-white outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30"
@@ -93,8 +109,8 @@ function EventEditForm({
           value={fields.location}
           pattern={nonWhitespacePattern}
           title="Zadejte alespoň jeden znak kromě mezer."
-          onChange={(event) =>
-            setFields((current) => ({ ...current, location: event.target.value }))
+          onChange={(inputEvent) =>
+            setFields((current) => ({ ...current, location: inputEvent.target.value }))
           }
           required
           className="rounded-md border border-stone-700 bg-stone-950 px-3 py-2 text-white outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30"
@@ -106,10 +122,10 @@ function EventEditForm({
         <textarea
           name="description"
           value={fields.description}
-          onChange={(event) =>
+          onChange={(inputEvent) =>
             setFields((current) => ({
               ...current,
-              description: event.target.value,
+              description: inputEvent.target.value,
             }))
           }
           rows={3}
@@ -123,7 +139,56 @@ function EventEditForm({
           disabled={isPending}
           className="rounded-md bg-red-700 px-4 py-2 font-medium text-white transition hover:bg-red-600 disabled:cursor-wait disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-red-400"
         >
-          {isPending ? "Ukládám…" : "Uložit změny"}
+          {isPending ? "Ukládám…" : submitLabel}
+        </button>
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-md border border-stone-700 px-4 py-2 text-sm hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Zrušit
+          </button>
+        )}
+        {state.status !== "idle" && (
+          <p
+            role={state.status === "error" ? "alert" : "status"}
+            className={
+              state.status === "error" ? "text-sm text-red-300" : "text-sm text-green-300"
+            }
+          >
+            {state.message}
+          </p>
+        )}
+      </div>
+    </form>
+  );
+}
+
+function DeleteEventForm({ event }: { event: ManagedEvent }) {
+  const [state, formAction, isPending] = useActionState(deleteEvent, initialState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.status === "success") router.refresh();
+  }, [router, state]);
+
+  function confirmRemoval(formEvent: FormEvent<HTMLFormElement>) {
+    if (!window.confirm(`Opravdu odebrat akci „${event.title}“?`)) {
+      formEvent.preventDefault();
+    }
+  }
+
+  return (
+    <form action={formAction} onSubmit={confirmRemoval} className="mt-5 border-t border-stone-700 pt-4">
+      <input type="hidden" name="id" value={event.id} readOnly />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="rounded-md border border-red-700 px-4 py-2 text-sm font-medium text-red-200 transition hover:bg-red-950 disabled:cursor-wait disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-red-400"
+        >
+          {isPending ? "Odebírám…" : "Odebrat vybranou akci"}
         </button>
         {state.status !== "idle" && (
           <p
@@ -146,13 +211,21 @@ export default function EventEditor({ events, today, onClose }: EventEditorProps
     [events],
   );
   const [selectedId, setSelectedId] = useState(sortedEvents[0]?.id ?? "");
+  const [isCreating, setIsCreating] = useState(false);
   const selectedEvent = sortedEvents.find((event) => event.id === selectedId);
+  const router = useRouter();
 
   useEffect(() => {
     if (!sortedEvents.some((event) => event.id === selectedId)) {
       setSelectedId(sortedEvents[0]?.id ?? "");
     }
   }, [selectedId, sortedEvents]);
+
+  function handleSaved(event?: ManagedEvent) {
+    if (event) setSelectedId(event.id);
+    setIsCreating(false);
+    router.refresh();
+  }
 
   return (
     <section
@@ -161,27 +234,54 @@ export default function EventEditor({ events, today, onClose }: EventEditorProps
     >
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-xl font-semibold">Upravit akci</h3>
+          <h3 className="text-xl font-semibold">Správa akcí</h3>
           <p className="mt-1 text-sm text-stone-400">
-            Plakát zůstane beze změny.
+            Plakát existující akce zůstává beze změny.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="shrink-0 rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-red-500"
-        >
-          Zavřít
-        </button>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="shrink-0 rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Zavřít
+          </button>
+        )}
       </div>
 
-      {sortedEvents.length > 0 ? (
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          aria-pressed={isCreating}
+          onClick={() => setIsCreating(true)}
+          className="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+        >
+          Přidat akci
+        </button>
+        {!isCreating && sortedEvents.length > 0 && (
+          <span className="text-sm text-stone-400">
+            {sortedEvents.length} {sortedEvents.length === 1 ? "akce" : "akcí"}
+          </span>
+        )}
+      </div>
+
+      {isCreating ? (
+        <EventForm
+          key="new-event"
+          today={today}
+          action={createEvent}
+          submitLabel="Přidat akci"
+          onCancel={() => setIsCreating(false)}
+          onSaved={handleSaved}
+        />
+      ) : sortedEvents.length > 0 && selectedEvent ? (
         <>
           <label className="mb-5 grid max-w-xl gap-1 text-sm text-stone-300">
-            Vyberte akci
+            Vyberte akci k úpravě
             <select
-              value={selectedEvent?.id ?? ""}
-              onChange={(event) => setSelectedId(event.target.value)}
+              value={selectedEvent.id}
+              onChange={(inputEvent) => setSelectedId(inputEvent.target.value)}
               className="w-full rounded-md border border-stone-700 bg-stone-950 px-3 py-2 text-white outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30"
             >
               {sortedEvents.map((event) => (
@@ -191,12 +291,18 @@ export default function EventEditor({ events, today, onClose }: EventEditorProps
               ))}
             </select>
           </label>
-          {selectedEvent && (
-            <EventEditForm key={selectedId} event={selectedEvent} today={today} />
-          )}
+          <EventForm
+            key={selectedEvent.id}
+            event={selectedEvent}
+            today={today}
+            action={updateEvent}
+            submitLabel="Uložit změny"
+            onSaved={handleSaved}
+          />
+          <DeleteEventForm key={`delete-${selectedEvent.id}`} event={selectedEvent} />
         </>
       ) : (
-        <p className="text-sm text-stone-300">Zatím nejsou žádné akce k úpravě.</p>
+        <p className="text-sm text-stone-300">Zatím nejsou žádné akce. Přidejte první.</p>
       )}
     </section>
   );

@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  createManagedEvent,
+  deleteManagedEvent,
   updateManagedEvent,
-  type EventUpdateState,
+  type EventEditorActionState,
 } from "@/lib/admin/event-update.mjs";
 import {
   AdminUnauthorizedError,
@@ -14,6 +16,8 @@ import {
   requireAdminSession,
 } from "@/lib/admin/session";
 import {
+  createSanityEvent,
+  deleteSanityEvent,
   findOtherSanityEventOnDate,
   findSanityEventById,
   updateSanityEvent,
@@ -32,7 +36,7 @@ export async function login(formData: FormData) {
   }
 
   await createAdminSession();
-  redirect("/");
+  redirect("/admin");
 }
 
 export async function logout() {
@@ -40,21 +44,23 @@ export async function logout() {
   redirect("/");
 }
 
+async function isAdminActionAuthorized() {
+  try {
+    await requireAdminSession();
+    return true;
+  } catch (error) {
+    if (error instanceof AdminUnauthorizedError) return false;
+    throw error;
+  }
+}
+
 export async function updateEvent(
-  _previousState: EventUpdateState,
+  _previousState: EventEditorActionState,
   formData: FormData,
-): Promise<EventUpdateState> {
+): Promise<EventEditorActionState> {
   try {
     const result = await updateManagedEvent(formData, {
-      isAuthorized: async () => {
-        try {
-          await requireAdminSession();
-          return true;
-        } catch (error) {
-          if (error instanceof AdminUnauthorizedError) return false;
-          throw error;
-        }
-      },
+      isAuthorized: isAdminActionAuthorized,
       findEventById: findSanityEventById,
       findOtherEventOnDate: findOtherSanityEventOnDate,
       updateEvent: updateSanityEvent,
@@ -63,8 +69,10 @@ export async function updateEvent(
     if (result.status === "error") return result;
 
     revalidatePath("/");
+    revalidatePath("/admin");
     return {
-      ...result,
+      status: "success",
+      event: result.event,
       message: "Změny akce jsou uložené.",
     };
   } catch (error) {
@@ -75,6 +83,71 @@ export async function updateEvent(
     return {
       status: "error",
       message: "Akci se nepodařilo uložit. Zkuste to prosím znovu.",
+    };
+  }
+}
+
+export async function createEvent(
+  _previousState: EventEditorActionState,
+  formData: FormData,
+): Promise<EventEditorActionState> {
+  try {
+    const result = await createManagedEvent(formData, {
+      isAuthorized: isAdminActionAuthorized,
+      findOtherEventOnDate: findOtherSanityEventOnDate,
+      createEvent: createSanityEvent,
+    });
+
+    if (result.status === "error") return result;
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return {
+      status: "success",
+      id: result.event.id,
+      event: result.event,
+      message: "Akce byla přidána.",
+    };
+  } catch (error) {
+    console.error(
+      "Failed to create Sanity event:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+    return {
+      status: "error",
+      message: "Akci se nepodařilo přidat. Zkuste to prosím znovu.",
+    };
+  }
+}
+
+export async function deleteEvent(
+  _previousState: EventEditorActionState,
+  formData: FormData,
+): Promise<EventEditorActionState> {
+  try {
+    const result = await deleteManagedEvent(formData, {
+      isAuthorized: isAdminActionAuthorized,
+      findEventById: findSanityEventById,
+      deleteEvent: deleteSanityEvent,
+    });
+
+    if (result.status === "error") return result;
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return {
+      status: "success",
+      id: result.id,
+      message: "Akce byla odebrána.",
+    };
+  } catch (error) {
+    console.error(
+      "Failed to delete Sanity event:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+    return {
+      status: "error",
+      message: "Akci se nepodařilo odebrat. Zkuste to prosím znovu.",
     };
   }
 }
