@@ -37,7 +37,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <div>
               <h1 className="text-3xl font-semibold">Správa akcí</h1>
               <p className="mt-2 text-sm text-stone-400">
-                Přidávejte, upravujte a odebírejte koncerty.
+                Přidávejte, upravujte a odebírejte akce.
               </p>
             </div>
             <Link
