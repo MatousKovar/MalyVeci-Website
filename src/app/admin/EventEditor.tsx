@@ -2,6 +2,7 @@
 
 import {
   useActionState,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -221,11 +222,9 @@ export default function EventEditor({ events, today, onClose }: EventEditorProps
     }
   }, [selectedId, sortedEvents]);
 
-  function handleSaved(event?: ManagedEvent) {
-    if (event) setSelectedId(event.id);
-    setIsCreating(false);
+  const handleSaved = useCallback(() => {
     router.refresh();
-  }
+  }, [router]);
 
   return (
     <section

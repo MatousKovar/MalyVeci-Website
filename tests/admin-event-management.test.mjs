@@ -118,3 +118,37 @@ test("authorized administrator can delete an existing event", async () => {
   assert.deepEqual(calls.findById, ["event-123"]);
   assert.deepEqual(calls.delete, ["event-123"]);
 });
+
+test("anonymous administrator deletion is rejected before reading or deleting", async () => {
+  const result = await deleteManagedEvent(makeFormData({ id: "event-123" }), {
+    isAuthorized: async () => false,
+    findEventById: async () => {
+      assert.fail("anonymous requests must not read Sanity");
+    },
+    deleteEvent: async () => {
+      assert.fail("anonymous requests must not delete from Sanity");
+    },
+  });
+
+  assert.deepEqual(result, {
+    status: "error",
+    message: "Přihlášení správce vypršelo. Přihlaste se znovu.",
+  });
+});
+
+test("a missing event cannot be deleted", async () => {
+  let deleteCount = 0;
+  const result = await deleteManagedEvent(makeFormData({ id: "deleted-event" }), {
+    isAuthorized: async () => true,
+    findEventById: async () => undefined,
+    deleteEvent: async () => {
+      deleteCount += 1;
+    },
+  });
+
+  assert.deepEqual(result, {
+    status: "error",
+    message: "Vybraná akce už neexistuje. Obnovte stránku a vyberte ji znovu.",
+  });
+  assert.equal(deleteCount, 0);
+});

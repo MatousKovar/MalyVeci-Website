@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAdminErrorMessage } from "@/lib/admin/login-message.mjs";
 import {
   hasAdminConfiguration,
@@ -39,12 +40,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 Přidávejte, upravujte a odebírejte koncerty.
               </p>
             </div>
-            <a
+            <Link
               href="/"
               className="rounded-md border border-stone-700 px-4 py-2 text-sm hover:bg-stone-900 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               Zpět na web
-            </a>
+            </Link>
           </div>
           {eventsError && (
             <p
