@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import eventContent from "../content/events.json" with { type: "json" };
 import { validateEvents } from "./content-validation.mjs";
 
@@ -11,7 +12,7 @@ export function readEventContent(source = eventContent) {
   const events = items.map((event) => {
     if (
       !event.posterPath ||
-      existsSync(new URL(`../../public${event.posterPath}`, import.meta.url))
+      existsSync(resolve(process.cwd(), "public", event.posterPath.slice(1)))
     ) {
       return event;
     }
