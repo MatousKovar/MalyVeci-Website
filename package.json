@@ -3,11 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "gallery": "node scripts/gen-gallery.mjs",
     "migrate:events": "node --env-file=.env.local scripts/migrate-events.mjs",
     "admin:secrets": "node scripts/admin-secrets.mjs",
-    "predev": "node scripts/gen-gallery.mjs",
-    "prebuild": "node scripts/gen-gallery.mjs",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

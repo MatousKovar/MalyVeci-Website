@@ -1,0 +1,106 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+import {
+  validateEvents,
+  validateGalleryPhotos,
+  validateShorts,
+} from "../src/lib/content-validation.mjs";
+
+test("valid events are returned and an invalid date is reported without dropping the rest", () => {
+  const result = validateEvents([
+    {
+      id: "event-2026-10-17",
+      title: "Posvícenská zábava",
+      date: "2026-10-17",
+      location: "Doubravice",
+    },
+    {
+      id: "event-invalid-date",
+      title: "Neplatné datum",
+      date: "2026-02-30",
+      location: "Plzeň",
+    },
+    {
+      id: "event-after-invalid",
+      title: "Oslava narozenin",
+      date: "2026-10-24",
+      location: "Hoštice",
+    },
+  ]);
+
+  assert.deepEqual(result.items, [
+    {
+      id: "event-2026-10-17",
+      title: "Posvícenská zábava",
+      date: "2026-10-17",
+      location: "Doubravice",
+    },
+    {
+      id: "event-after-invalid",
+      title: "Oslava narozenin",
+      date: "2026-10-24",
+      location: "Hoštice",
+    },
+  ]);
+  assert.deepEqual(result.errors, [
+    'Akce "event-invalid-date": datum musí být platné datum ve formátu YYYY-MM-DD.',
+  ]);
+});
+
+test("shorts require unique canonical YouTube IDs and explicit unique order", () => {
+  const result = validateShorts([
+    { id: "short-first", videoId: "iDQUGjGwNrs", order: 0 },
+    { id: "short-second", videoId: "N5wYJKatssw", order: 1 },
+    { id: "short-invalid", videoId: "https://youtu.be/kZdWxsTCQ5o", order: 2 },
+    { id: "short-third", videoId: "kZdWxsTCQ5o", order: 2 },
+    { id: "short-duplicate-order", videoId: "jN81OZ1XY74", order: 1 },
+  ]);
+
+  assert.deepEqual(result.items, [
+    { id: "short-first", videoId: "iDQUGjGwNrs", order: 0 },
+    { id: "short-second", videoId: "N5wYJKatssw", order: 1 },
+    { id: "short-third", videoId: "kZdWxsTCQ5o", order: 2 },
+  ]);
+  assert.deepEqual(result.errors, [
+    'Krátké video "short-invalid": videoId musí být kanonické 11znakové ID YouTube.',
+    'Krátké video "short-duplicate-order": pořadí 1 už používá jiná položka.',
+  ]);
+});
+
+test("gallery photos require local paths, dimensions, and unique order", () => {
+  const result = validateGalleryPhotos([
+    { id: "first.jpg", src: "/gallery/first.jpg", order: 0, width: 1920, height: 1080 },
+    { id: "second.jpg", src: "/gallery/second.jpg", order: 1, width: 1080, height: 1920 },
+    { id: "external.jpg", src: "https://example.com/external.jpg", order: 2, width: 1920, height: 1080 },
+    { id: "zero-width.jpg", src: "/gallery/zero-width.jpg", order: 3, width: 0, height: 1080 },
+    { id: "third.jpg", src: "/gallery/third.jpg", order: 2, width: 1920, height: 1080 },
+    { id: "duplicate-order.jpg", src: "/gallery/duplicate-order.jpg", order: 1, width: 1920, height: 1080 },
+  ]);
+
+  assert.deepEqual(result.items, [
+    { id: "first.jpg", src: "/gallery/first.jpg", order: 0, width: 1920, height: 1080 },
+    { id: "second.jpg", src: "/gallery/second.jpg", order: 1, width: 1080, height: 1920 },
+    { id: "third.jpg", src: "/gallery/third.jpg", order: 2, width: 1920, height: 1080 },
+  ]);
+  assert.deepEqual(result.errors, [
+    'Fotka galerie "external.jpg": cesta musí ukazovat do složky /gallery/.',
+    'Fotka galerie "zero-width.jpg": rozměry musí být kladná celá čísla.',
+    'Fotka galerie "duplicate-order.jpg": pořadí 1 už používá jiná fotka.',
+  ]);
+});
+
+test("the checked-in content files satisfy their validated formats", () => {
+  const readContent = (name) =>
+    JSON.parse(readFileSync(new URL(`../src/content/${name}.json`, import.meta.url), "utf8"));
+  const events = validateEvents(readContent("events"));
+  const shorts = validateShorts(readContent("shorts"));
+  const gallery = validateGalleryPhotos(readContent("gallery"));
+
+  assert.ok(events.items.length > 0);
+  assert.deepEqual(events.errors, []);
+  assert.ok(shorts.items.length > 0);
+  assert.deepEqual(shorts.errors, []);
+  assert.ok(gallery.items.length > 0);
+  assert.deepEqual(gallery.errors, []);
+});

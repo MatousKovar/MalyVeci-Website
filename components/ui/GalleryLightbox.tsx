@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { GalleryImage } from "@/lib/gallery-images";
+import type { GalleryPhotoContent } from "@/lib/content-types";
 
 type GalleryLightboxProps = {
-  images: GalleryImage[];
+  images: GalleryPhotoContent[];
   index: number | null; // aktuální otevřená fotka, null = zavřeno
   onClose: () => void;
   onNavigate: (index: number) => void;

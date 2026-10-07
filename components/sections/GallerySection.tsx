@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { galleryImages } from "@/lib/gallery-images";
+import galleryPhotos from "@/content/gallery.json";
+import { validateGalleryPhotos } from "@/lib/content-validation.mjs";
 import GalleryLightbox from "@/../components/ui/GalleryLightbox";
+
+const galleryContent = validateGalleryPhotos(galleryPhotos);
+const galleryImages = [...galleryContent.items].sort(
+  (first, second) => first.order - second.order,
+);
 
 export default function GallerySection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -19,6 +25,12 @@ export default function GallerySection() {
         <span className="text-black">FO</span>
         <span className="text-[#D90000]">TOGRAFIE</span>
       </h2>
+
+      {galleryContent.errors.length > 0 && (
+        <p role="alert" className="mx-auto mb-6 max-w-3xl px-5 text-center text-sm text-amber-200">
+          Některé fotky galerie se nepodařilo načíst. {galleryContent.errors.join(" ")}
+        </p>
+      )}
 
       {galleryImages.length === 0 ? (
         <p className="text-center text-white/50">

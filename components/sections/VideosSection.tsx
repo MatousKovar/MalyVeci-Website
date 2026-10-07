@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { youtubeShorts } from "@/lib/data";
+import shorts from "@/content/shorts.json";
+import { validateShorts } from "@/lib/content-validation.mjs";
 import { getYouTubeId } from "../ui/youtube";
 import ShortsCarousel from "../ui/ShortsCarousel";
 import ReelsModal from "../ui/ReelsModal";
+
+const shortsContent = validateShorts(shorts);
+const youtubeShorts = [...shortsContent.items]
+  .sort((first, second) => first.order - second.order)
+  .map((short) => short.videoId);
 
 export default function VideosSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -42,7 +48,16 @@ export default function VideosSection() {
         .
       </p>
 
-      <ShortsCarousel ids={ids} onOpen={(i) => setOpenIndex(i)} initialIndex={startIndex} />
+      {shortsContent.errors.length > 0 && (
+        <p role="alert" className="mx-auto mb-6 max-w-3xl px-5 text-center text-sm text-amber-200">
+          Některá krátká videa se nepodařilo načíst. {shortsContent.errors.join(" ")}
+        </p>
+      )}
+      {ids.length > 0 ? (
+        <ShortsCarousel ids={ids} onOpen={(i) => setOpenIndex(i)} initialIndex={startIndex} />
+      ) : (
+        <p className="text-center text-stone-400">Zatím tu nejsou žádná krátká videa.</p>
+      )}
 
       <ReelsModal ids={ids} index={openIndex} onClose={() => setOpenIndex(null)} />
     </section>

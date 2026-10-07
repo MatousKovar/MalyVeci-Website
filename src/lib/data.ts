@@ -8,9 +8,6 @@ import { StaticImageData } from "next/image";
 
 
 
-// Fotky galerie se už neřídí odsud – automaticky se načítají ze složky
-// public/gallery (viz src/lib/gallery-images.ts, generuje `npm run gallery`).
-
 export type Member = {name: string,
                role: string,
                bio: string,
@@ -52,21 +49,6 @@ export const members: Member [] = [
 
 
 export type { Event } from "@/lib/events";
-
-// YouTube Shorts do sekce „Poslechni si nás".
-// Stačí vložit celý odkaz na short (např. https://www.youtube.com/shorts/XXXX),
-// klasický odkaz na video, youtu.be odkaz, nebo jen samotné ID videa – vše se zpracuje.
-export const youtubeShorts: string[] = [
-  "iDQUGjGwNrs",
-  "N5wYJKatssw",
-  "kZdWxsTCQ5o",
-  "jN81OZ1XY74",
-  "cTtbS6OfMmA",
-  "JQ9-q513whw",
-  "Syhfb6TsR7w",
-  "u8vwHk4DVBQ",
-  "t0wsmIPrzcY",
-];
 
 export const spotifyTracks = [
   "https://open.spotify.com/embed/track/6wnc03soJZURZVtyAbK81X?utm_source=generator",

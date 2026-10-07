@@ -1,0 +1,60 @@
+[
+  {
+    "id": "event-2026-10-17-posvicenska-zabava",
+    "title": "Posvícenská zábava",
+    "date": "2026-10-17",
+    "location": "Doubravice",
+    "description": "Podrobnosti brzy..."
+  },
+  {
+    "id": "event-2026-10-24-oslava-narozenin",
+    "title": "Oslava narozenin",
+    "date": "2026-10-24",
+    "location": "Hoštice",
+    "description": "Podrobnosti brzy..."
+  },
+  {
+    "id": "event-2026-10-29-andel-music-bar",
+    "title": "Anděl Music Bar",
+    "date": "2026-10-29",
+    "location": "Plzeň",
+    "description": "Zahrajeme společně s kapelou The Flip Flops",
+    "posterPath": "/andel.PNG"
+  },
+  {
+    "id": "event-2026-11-28-maturitni-ples",
+    "title": "Maturitní ples",
+    "date": "2026-11-28",
+    "location": "Mariánské Lázně"
+  },
+  {
+    "id": "event-2026-12-11-firemni-vecirek",
+    "title": "Firemní večírek",
+    "date": "2026-12-11",
+    "location": "Radošovice"
+  },
+  {
+    "id": "event-2026-12-12-hradesicky-ples",
+    "title": "Hradešický ples",
+    "date": "2026-12-12",
+    "location": "Horažďovice"
+  },
+  {
+    "id": "event-2027-01-29-maturitni-ples",
+    "title": "Maturitní ples",
+    "date": "2027-01-29",
+    "location": "Strakonice"
+  },
+  {
+    "id": "event-2027-02-20-maturitni-ples",
+    "title": "Maturitní ples",
+    "date": "2027-02-20",
+    "location": "Strakonice"
+  },
+  {
+    "id": "event-2027-07-24-poutova-zabava",
+    "title": "Pouťová zábava",
+    "date": "2027-07-24",
+    "location": "Čejetice"
+  }
+]
