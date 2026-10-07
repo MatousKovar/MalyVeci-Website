@@ -5,8 +5,7 @@ import {
   isAdminAuthenticated,
 } from "@/lib/admin/session";
 import { getTodayInPrague } from "@/lib/admin/event-update.mjs";
-import type { ManagedEvent } from "@/lib/events";
-import { fetchEvents } from "@/lib/sanity/events";
+import { readEventContent } from "@/lib/event-content.mjs";
 import AdminToolbar from "./AdminToolbar";
 import EventEditor from "./EventEditor";
 import { login } from "./actions";
@@ -17,18 +16,7 @@ type AdminPageProps = {
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   if (await isAdminAuthenticated()) {
-    let events: ManagedEvent[] = [];
-    let eventsError = false;
-
-    try {
-      events = await fetchEvents();
-    } catch (error) {
-      eventsError = true;
-      console.error(
-        "Failed to load events for the admin page:",
-        error instanceof Error ? error.message : "Unknown error",
-      );
-    }
+    const { events, errors } = readEventContent();
 
     return (
       <>
@@ -47,14 +35,16 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               Zpět na web
             </Link>
           </div>
-          {eventsError && (
-            <p
+          {errors.length > 0 && (
+            <div
               role="alert"
               className="mx-auto mb-5 max-w-3xl rounded-md border border-red-800 bg-red-950/50 p-4 text-sm text-red-200"
             >
-              Seznam akcí se nepodařilo načíst. Zkontrolujte připojení k Sanity a
-              obnovte stránku.
-            </p>
+              <p>Některé akce se nepodařilo načíst:</p>
+              <ul className="mt-2 list-disc pl-5">
+                {errors.map((error) => <li key={error}>{error}</li>)}
+              </ul>
+            </div>
           )}
           <EventEditor events={events} today={getTodayInPrague()} />
         </main>

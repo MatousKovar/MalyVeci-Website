@@ -9,7 +9,7 @@ export default function EventCard({
   title,
   date,
   location,
-  poster_location,
+  posterPath,
   showPosterFunction, // <--- Receive the function here
 }: EventCardProps) {
   return (
@@ -20,9 +20,9 @@ export default function EventCard({
         <p className="text-gray-400">{location}</p>
       </div>
 
-      {poster_location && (
+      {posterPath && (
         <button
-          onClick={() => showPosterFunction(poster_location)}
+          onClick={() => showPosterFunction(posterPath)}
           className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto"
         >
           Zobrazit plakát

@@ -13,7 +13,7 @@ export default function EventListItem({
   title,
   date,
   location,
-  poster_location,
+  posterPath,
   description,
   showPosterFunction,
 isHighlighted = false,
@@ -95,11 +95,11 @@ isHighlighted = false,
             </p>
           </div>
 
-          {poster_location && (
+          {posterPath && (
             <button
               onClick={(e) => {
                 e.stopPropagation(); // Zabrání tomu, aby se po kliknutí na tlačítko zároveň zavřel ten dropdown
-                showPosterFunction(poster_location);
+                showPosterFunction(posterPath);
               }}
               className="bg-stone-800 text-stone-200 px-5 py-2 text-sm font-bold rounded hover:bg-[#D90000] hover:text-white transition-colors duration-300"
             >

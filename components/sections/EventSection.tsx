@@ -9,10 +9,9 @@ import type { ManagedEvent } from "@/lib/events";
 import EventEditor from "@/app/admin/EventEditor";
 
 
-/**Defining data type of input function to EventsSection. Function is passed poster_location and shows popup. Defined in page.tsx */
 type EventsSectionProps = {
   events: ManagedEvent[];
-  hasError: boolean;
+  errors: string[];
   isAdmin: boolean;
   today: string;
   showPosterFunction: (src: string) => void;
@@ -21,7 +20,7 @@ type EventsSectionProps = {
 
 export default function EventsSection({
   events,
-  hasError,
+  errors,
   isAdmin,
   today,
   showPosterFunction,
@@ -105,30 +104,35 @@ export default function EventsSection({
 
         <div className="flex flex-col border border-stone-800 rounded-lg p-6 bg-stone-900/50 text-white md:justify-start">
           <div className="flex flex-col max-h-[500px] overflow-y-auto custom-scrollbar z-10">
-          {hasError ? (
-            <p className="p-6 text-stone-300" role="alert">
-              Akce se nepodařilo načíst. Zkuste to prosím později.
-            </p>
-          ) : events.length > 0 ? (
+          {errors.length > 0 && (
+            <div className="p-4 text-left text-sm text-red-200" role="alert">
+              <p>Některé akce se nepodařilo načíst:</p>
+              <ul className="mt-2 list-disc pl-5">
+                {errors.map((error) => <li key={error}>{error}</li>)}
+              </ul>
+            </div>
+          )}
+          {events.length > 0 ? (
             events.map((event) => {
-              const eventKey = `${event.date}-${event.title}-${event.location}`;
               return (
                 <EventListItem
-                  key={eventKey}
+                  key={event.id}
                   title={event.title}
                   date={event.date}
                   location={event.location}
-                  poster_location={event.poster_location}
+                  posterPath={event.posterPath}
                   description={event.description}
                   showPosterFunction={showPosterFunction}
                   isHighlighted={highlightedDate === event.date}
                 />
               );
             })
-          ) : (
+          ) : errors.length === 0 ? (
             <p className="p-6 text-stone-500 italic">
               Zatím tu nejsou žádné naplánované akce.
             </p>
+          ) : (
+            <p className="p-6 text-stone-500 italic">Není dostupná žádná platná akce.</p>
           )}
         </div>
 

@@ -19,14 +19,14 @@ import type { ManagedEvent } from "@/lib/events";
 
 type HomePageProps = {
   events: ManagedEvent[];
-  eventsError: boolean;
+  eventErrors: string[];
   isAdmin: boolean;
   today: string;
 };
 
 export default function HomePage({
   events,
-  eventsError,
+  eventErrors,
   isAdmin,
   today,
 }: HomePageProps) {
@@ -71,7 +71,7 @@ export default function HomePage({
         <ONasSection />
         <EventSection
           events={events}
-          hasError={eventsError}
+          errors={eventErrors}
           isAdmin={isAdmin}
           today={today}
           showPosterFunction={(src) => setPoster(src)}

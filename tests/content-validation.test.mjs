@@ -6,6 +6,7 @@ import {
   validateGalleryPhotos,
   validateShorts,
 } from "../src/lib/content-validation.mjs";
+import { readEventContent } from "../src/lib/event-content.mjs";
 
 test("valid events are returned and an invalid date is reported without dropping the rest", () => {
   const result = validateEvents([
@@ -45,6 +46,45 @@ test("valid events are returned and an invalid date is reported without dropping
   ]);
   assert.deepEqual(result.errors, [
     'Akce "event-invalid-date": datum musí být platné datum ve formátu YYYY-MM-DD.',
+  ]);
+});
+
+test("event content skips invalid records and sorts valid events by date", () => {
+  const result = readEventContent([
+    { id: "event-later", title: "Pozdější akce", date: "2026-12-12", location: "Plzeň" },
+    { id: "event-invalid", title: "Neplatná akce", date: "2026-02-30", location: "Brno" },
+    { id: "event-sooner", title: "Dřívější akce", date: "2026-10-17", location: "Praha" },
+  ]);
+
+  assert.deepEqual(result.events.map((event) => event.id), [
+    "event-sooner",
+    "event-later",
+  ]);
+  assert.equal(result.errors.length, 1);
+  assert.match(result.errors[0], /event-invalid/);
+});
+
+test("a missing event poster is reported while its event remains visible", () => {
+  const result = readEventContent([
+    {
+      id: "event-missing-poster",
+      title: "Akce bez souboru plakátu",
+      date: "2026-10-17",
+      location: "Praha",
+      posterPath: "/missing-event-poster.jpg",
+    },
+  ]);
+
+  assert.deepEqual(result.events, [
+    {
+      id: "event-missing-poster",
+      title: "Akce bez souboru plakátu",
+      date: "2026-10-17",
+      location: "Praha",
+    },
+  ]);
+  assert.deepEqual(result.errors, [
+    'Akce "event-missing-poster": soubor plakátu "/missing-event-poster.jpg" neexistuje.',
   ]);
 });
 

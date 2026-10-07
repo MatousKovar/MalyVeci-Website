@@ -20,17 +20,17 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Events in Sanity
+## Akce a spravovaný obsah
 
-The homepage reads published events from Sanity. Set `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` in `.env.local` and in the production environment. Set `SANITY_API_WRITE_TOKEN` in both environments for event imports and admin edits. Keep it private and never prefix it with `NEXT_PUBLIC_`.
+Veřejný web a přihlášená administrační stránka načítají akce ze stejného souboru `src/content/events.json`. Každý záznam se ověřuje; chybná akce se přeskočí a zobrazí se zpráva. Plakáty jsou v `public/` a JSON odkazuje na jejich lokální cesty.
 
-Run `npm run migrate:events` to import the current and future events and posters from `src/lib/event-seed.json` and `public/`. The import uses the Europe/Prague date, keeps existing matching documents, and can be run again safely.
+Issue #27 převádí čtení akcí. Přidávání, změny a odebírání akcí řeší navazující tickety pro správu. Do té doby tyto zapisovací akce stále používají Sanity, takže jejich prostředí potřebuje `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` a neveřejný `SANITY_API_WRITE_TOKEN`. Veřejný web a seznam na stránce `/admin` ale data ze Sanity nečtou.
 
 ## Admin login
 
 `/admin` accepts one shared admin password. Run `npm run admin:secrets` to choose it. The script hides the password while you type, writes its scrypt hash and a signing secret to `.env.local`, and never prints either value. Restart the dev server to load them. For Vercel, copy `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` from `.env.local` into the project environment variables, then redeploy. Add them to Production and Preview only if those deployments should allow admin login.
 
-The app stores only a scrypt password hash. After a successful login, it signs an HttpOnly, SameSite cookie that expires after 30 days. Future write actions should call `requireAdminSession()` from `src/lib/admin/session.ts` before changing data.
+The app stores only a scrypt password hash. After a successful login, it signs an HttpOnly, SameSite cookie that expires after 30 days. Write actions call `requireAdminSession()` from `src/lib/admin/session.ts` before changing data.
 
 ## Learn More
 

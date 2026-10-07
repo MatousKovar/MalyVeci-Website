@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "migrate:events": "node --env-file=.env.local scripts/migrate-events.mjs",
     "admin:secrets": "node scripts/admin-secrets.mjs",
     "dev": "next dev --turbopack",
     "build": "next build",

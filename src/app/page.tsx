@@ -1,32 +1,20 @@
 import HomePage from "@/app/HomePage";
 import AdminToolbar from "@/app/admin/AdminToolbar";
 import { getTodayInPrague } from "@/lib/admin/event-update.mjs";
-import type { ManagedEvent } from "@/lib/events";
 import { isAdminAuthenticated } from "@/lib/admin/session";
-import { fetchEvents } from "@/lib/sanity/events";
+import { readEventContent } from "@/lib/event-content.mjs";
 
 export const revalidate = 60;
 
 export default async function Home() {
   const isAdmin = await isAdminAuthenticated();
-  let events: ManagedEvent[] = [];
-  let eventsError = false;
-
-  try {
-    events = await fetchEvents();
-  } catch (error) {
-    eventsError = true;
-    console.error(
-      "Failed to load events from Sanity:",
-      error instanceof Error ? error.message : "Unknown error",
-    );
-  }
+  const { events, errors: eventErrors } = readEventContent();
 
   return (
     <>
       <HomePage
         events={events}
-        eventsError={eventsError}
+        eventErrors={eventErrors}
         isAdmin={isAdmin}
         today={getTodayInPrague()}
       />
