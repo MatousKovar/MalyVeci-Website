@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import {
   validateEvents,
@@ -70,8 +70,8 @@ test("shorts require unique canonical YouTube IDs and explicit unique order", ()
 
 test("gallery photos require local paths, dimensions, and unique order", () => {
   const result = validateGalleryPhotos([
-    { id: "first.jpg", src: "/gallery/first.jpg", order: 0, width: 1920, height: 1080 },
-    { id: "second.jpg", src: "/gallery/second.jpg", order: 1, width: 1080, height: 1920 },
+    { id: "photo-stable-1", src: "/gallery/first.jpg", order: 0, width: 1920, height: 1080 },
+    { id: "photo-stable-2", src: "/gallery/second.jpg", order: 1, width: 1080, height: 1920 },
     { id: "external.jpg", src: "https://example.com/external.jpg", order: 2, width: 1920, height: 1080 },
     { id: "zero-width.jpg", src: "/gallery/zero-width.jpg", order: 3, width: 0, height: 1080 },
     { id: "third.jpg", src: "/gallery/third.jpg", order: 2, width: 1920, height: 1080 },
@@ -79,8 +79,8 @@ test("gallery photos require local paths, dimensions, and unique order", () => {
   ]);
 
   assert.deepEqual(result.items, [
-    { id: "first.jpg", src: "/gallery/first.jpg", order: 0, width: 1920, height: 1080 },
-    { id: "second.jpg", src: "/gallery/second.jpg", order: 1, width: 1080, height: 1920 },
+    { id: "photo-stable-1", src: "/gallery/first.jpg", order: 0, width: 1920, height: 1080 },
+    { id: "photo-stable-2", src: "/gallery/second.jpg", order: 1, width: 1080, height: 1920 },
     { id: "third.jpg", src: "/gallery/third.jpg", order: 2, width: 1920, height: 1080 },
   ]);
   assert.deepEqual(result.errors, [
@@ -103,4 +103,11 @@ test("the checked-in content files satisfy their validated formats", () => {
   assert.deepEqual(shorts.errors, []);
   assert.ok(gallery.items.length > 0);
   assert.deepEqual(gallery.errors, []);
+  assert.deepEqual(
+    gallery.items.filter((photo) => !existsSync(new URL(`../public${photo.src}`, import.meta.url))),
+    [],
+  );
+  assert.ok(events.items.every((event) =>
+    !event.posterPath || existsSync(new URL(`../public${event.posterPath}`, import.meta.url)),
+  ));
 });

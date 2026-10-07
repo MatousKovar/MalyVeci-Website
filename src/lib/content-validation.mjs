@@ -163,9 +163,6 @@ function galleryPhotoError(value, index) {
   ) {
     return `${label}: cesta musí ukazovat do složky /gallery/.`;
   }
-  if (value.src.slice("/gallery/".length) !== value.id) {
-    return `${label}: ID musí odpovídat názvu souboru.`;
-  }
   if (!Number.isInteger(value.order) || value.order < 0) {
     return `${label}: pořadí musí být celé číslo od nuly.`;
   }
