@@ -22,9 +22,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Akce a spravovaný obsah
 
-Veřejný web a přihlášená administrační stránka načítají akce ze stejného souboru `src/content/events.json`. Každý záznam se ověřuje; chybná akce se přeskočí a zobrazí se zpráva. Plakáty jsou v `public/` a JSON odkazuje na jejich lokální cesty.
+Veřejný web čte akce z `src/content/events.json`. Admin při místním vývoji zapisuje změny přímo do tohoto souboru. V produkci vytvoří commit přes GitHub API. Vercel pak spustí nový deployment a veřejný web změnu ukáže po jeho dokončení.
 
-Issue #27 převádí čtení akcí. Přidávání, změny a odebírání akcí řeší navazující tickety pro správu. Do té doby tyto zapisovací akce stále používají Sanity, takže jejich prostředí potřebuje `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` a neveřejný `SANITY_API_WRITE_TOKEN`. Veřejný web a seznam na stránce `/admin` ale data ze Sanity nečtou.
+Pro zápis z produkčního adminu nastav ve Vercelu `GITHUB_REPOSITORY` na `MatousKovar/MalyVeci-Website` a `GITHUB_CONTENTS_TOKEN` na fine-grained personal access token omezený na tento repozitář s oprávněním `Contents: Read and write`. Proměnné přidej jen do Production. `GITHUB_CONTENTS_BRANCH` může určit jinou cílovou větev; výchozí hodnota je `main`. Token uchovávej jako neveřejnou proměnnou. GitHub vyžaduje pro vytvoření nebo změnu souboru v repozitáři oprávnění `Contents: write` ([GitHub REST API](https://docs.github.com/en/rest/repos/contents#fine-grained-access-tokens-for-create-or-update-file-contents)).
 
 ## Admin login
 

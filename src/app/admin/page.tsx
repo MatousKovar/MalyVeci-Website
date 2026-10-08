@@ -5,7 +5,7 @@ import {
   isAdminAuthenticated,
 } from "@/lib/admin/session";
 import { getTodayInPrague } from "@/lib/admin/event-update.mjs";
-import { readEventContent } from "@/lib/event-content.mjs";
+import { readManagedEventContent } from "@/lib/admin/event-storage";
 import AdminToolbar from "./AdminToolbar";
 import EventEditor from "./EventEditor";
 import { login } from "./actions";
@@ -16,7 +16,7 @@ type AdminPageProps = {
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   if (await isAdminAuthenticated()) {
-    const { events, errors } = readEventContent();
+    const { events, errors } = await readManagedEventContent();
 
     return (
       <>

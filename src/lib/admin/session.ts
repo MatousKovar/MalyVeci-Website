@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { hasEventStorageConfiguration } from "./event-storage";
 import {
   isPasswordHashValid,
   isSessionSecretValid,
@@ -20,7 +21,8 @@ function getConfiguredAdminSessionSecret() {
 export function hasAdminConfiguration() {
   return (
     isPasswordHashValid(process.env.ADMIN_PASSWORD_HASH) &&
-    getConfiguredAdminSessionSecret() !== undefined
+    getConfiguredAdminSessionSecret() !== undefined &&
+    hasEventStorageConfiguration()
   );
 }
 

@@ -16,12 +16,12 @@ import {
   requireAdminSession,
 } from "@/lib/admin/session";
 import {
-  createSanityEvent,
-  deleteSanityEvent,
-  findOtherSanityEventOnDate,
-  findSanityEventById,
-  updateSanityEvent,
-} from "@/lib/sanity/events";
+  createManagedEventInStorage,
+  deleteManagedEventFromStorage,
+  findManagedEventById,
+  findOtherManagedEventOnDate,
+  updateManagedEventInStorage,
+} from "@/lib/admin/event-storage";
 import { verifyPassword } from "@/lib/admin/session-crypto.mjs";
 
 export async function login(formData: FormData) {
@@ -61,9 +61,9 @@ export async function updateEvent(
   try {
     const result = await updateManagedEvent(formData, {
       isAuthorized: isAdminActionAuthorized,
-      findEventById: findSanityEventById,
-      findOtherEventOnDate: findOtherSanityEventOnDate,
-      updateEvent: updateSanityEvent,
+      findEventById: findManagedEventById,
+      findOtherEventOnDate: findOtherManagedEventOnDate,
+      updateEvent: updateManagedEventInStorage,
     });
 
     if (result.status === "error") return result;
@@ -73,11 +73,14 @@ export async function updateEvent(
     return {
       status: "success",
       event: result.event,
-      message: "Změny akce jsou uložené.",
+      message:
+        process.env.VERCEL === "1"
+          ? "Změny jsou uložené. Na webu se projeví po dokončení nasazení."
+          : "Změny jsou uložené v JSON souboru.",
     };
   } catch (error) {
     console.error(
-      "Failed to update event in Sanity:",
+      "Failed to update event content:",
       error instanceof Error ? error.message : "Unknown error",
     );
     return {
@@ -94,8 +97,8 @@ export async function createEvent(
   try {
     const result = await createManagedEvent(formData, {
       isAuthorized: isAdminActionAuthorized,
-      findOtherEventOnDate: findOtherSanityEventOnDate,
-      createEvent: createSanityEvent,
+      findOtherEventOnDate: findOtherManagedEventOnDate,
+      createEvent: createManagedEventInStorage,
     });
 
     if (result.status === "error") return result;
@@ -106,11 +109,14 @@ export async function createEvent(
       status: "success",
       id: result.event.id,
       event: result.event,
-      message: "Akce byla přidána.",
+      message:
+        process.env.VERCEL === "1"
+          ? "Akce je uložená. Na webu se projeví po dokončení nasazení."
+          : "Akce je uložená v JSON souboru.",
     };
   } catch (error) {
     console.error(
-      "Failed to create Sanity event:",
+      "Failed to create event content:",
       error instanceof Error ? error.message : "Unknown error",
     );
     return {
@@ -127,8 +133,8 @@ export async function deleteEvent(
   try {
     const result = await deleteManagedEvent(formData, {
       isAuthorized: isAdminActionAuthorized,
-      findEventById: findSanityEventById,
-      deleteEvent: deleteSanityEvent,
+      findEventById: findManagedEventById,
+      deleteEvent: deleteManagedEventFromStorage,
     });
 
     if (result.status === "error") return result;
@@ -138,11 +144,14 @@ export async function deleteEvent(
     return {
       status: "success",
       id: result.id,
-      message: "Akce byla odebrána.",
+      message:
+        process.env.VERCEL === "1"
+          ? "Akce je odebraná. Z webu zmizí po dokončení nasazení."
+          : "Akce je odebraná z JSON souboru.",
     };
   } catch (error) {
     console.error(
-      "Failed to delete Sanity event:",
+      "Failed to delete event content:",
       error instanceof Error ? error.message : "Unknown error",
     );
     return {

@@ -129,6 +129,7 @@ try {
   stdout.write("Admin credentials saved to .env.local. The password was not printed.\n");
   stdout.write("Restart the local dev server to load them.\n");
   stdout.write("For Vercel, copy ADMIN_PASSWORD_HASH and ADMIN_SESSION_SECRET from .env.local into the project environment variables, then redeploy.\n");
+  stdout.write("To save events from the admin panel on Vercel, also set GITHUB_REPOSITORY and GITHUB_CONTENTS_TOKEN in Production.\n");
 } catch (error) {
   stdout.write(`${error instanceof Error ? error.message : "Could not generate admin secrets."}\n`);
   process.exitCode = 1;
