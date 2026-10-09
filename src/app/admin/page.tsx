@@ -8,6 +8,7 @@ import { getTodayInPrague } from "@/lib/admin/event-update.mjs";
 import { readManagedEventContent } from "@/lib/admin/event-storage";
 import AdminToolbar from "./AdminToolbar";
 import EventEditor from "./EventEditor";
+import GalleryUploader from "./GalleryUploader";
 import { login } from "./actions";
 
 type AdminPageProps = {
@@ -23,9 +24,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <main className="min-h-screen bg-stone-950 px-5 py-20 text-stone-100">
           <div className="mx-auto mb-8 flex max-w-3xl flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-semibold">Správa akcí</h1>
+              <h1 className="text-3xl font-semibold">Správa obsahu</h1>
               <p className="mt-2 text-sm text-stone-400">
-                Přidávejte, upravujte a odebírejte akce.
+                Upravujte akce a přidávejte fotky do galerie.
               </p>
             </div>
             <Link
@@ -47,6 +48,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             </div>
           )}
           <EventEditor events={events} today={getTodayInPrague()} />
+          <div className="mt-8">
+            <GalleryUploader />
+          </div>
         </main>
         <AdminToolbar />
       </>
