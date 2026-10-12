@@ -3,7 +3,7 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
-  galleryImageTypes,
+  getGalleryUploadMimeType,
   MAX_GALLERY_UPLOAD_BYTES,
   type GalleryImageMimeType,
 } from "@/lib/gallery-upload";
@@ -20,50 +20,58 @@ type GalleryUploadItem = {
 
 type UploadResponse = { message?: string };
 
-const mimeTypes = Object.keys(galleryImageTypes) as GalleryImageMimeType[];
-const extensionTypes = new Map<string, GalleryImageMimeType>(
-  mimeTypes.flatMap((mimeType) =>
-    galleryImageTypes[mimeType].map((extension) => [extension, mimeType] as const),
-  ),
-);
+const HEIC_INPUT_MIME_TYPE = "image/heic";
 
-function getSupportedMimeType(file: File): GalleryImageMimeType | undefined {
-  const extension = file.name.split(".").pop()?.toLowerCase();
-  const extensionType = extension ? extensionTypes.get(extension) : undefined;
-  const declaredType = mimeTypes.includes(file.type as GalleryImageMimeType)
-    ? (file.type as GalleryImageMimeType)
-    : undefined;
-
-  if (file.type && !declaredType) return undefined;
-  if (extensionType && declaredType && extensionType !== declaredType) return undefined;
-  return declaredType ?? extensionType;
+function getSupportedMimeType(file: File): GalleryImageMimeType | typeof HEIC_INPUT_MIME_TYPE | undefined {
+  return getGalleryUploadMimeType(file.name, file.type);
 }
 
 function validateSelectedFile(file: File) {
   if (!getSupportedMimeType(file)) {
-    return "Nepodporovaný typ. Vyberte fotku JPEG, PNG nebo WebP.";
+    return "Nepodporovaný typ. Vyberte fotku JPEG, PNG, WebP, HEIC nebo HEIF.";
   }
   if (file.size === 0) return "Soubor je prázdný.";
   return undefined;
 }
 
-function updateCanvasBlob(canvas: HTMLCanvasElement, quality: number) {
+async function convertHeicToJpeg(file: File) {
+  let jpeg: Blob;
+  try {
+    const { heicTo, isHeic } = await import("heic-to");
+    if (!(await isHeic(file))) throw new Error("Vybraný soubor není HEIC/HEIF.");
+    jpeg = await heicTo({ blob: file, type: "image/jpeg", quality: 0.92 });
+  } catch {
+    throw new Error("HEIC/HEIF fotku se nepodařilo převést. Zkuste ji uložit jako JPEG.");
+  }
+
+  if (!jpeg || jpeg.type !== "image/jpeg" || jpeg.size === 0) {
+    throw new Error("HEIC/HEIF fotku se nepodařilo převést. Zkuste ji uložit jako JPEG.");
+  }
+
+  return jpeg;
+}
+
+function updateCanvasBlob(
+  canvas: HTMLCanvasElement,
+  quality: number,
+  mimeType: "image/jpeg" | "image/webp",
+) {
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
-        if (!blob || blob.type !== "image/webp") {
+        if (!blob || blob.type !== mimeType) {
           reject(new Error("Prohlížeč nedokáže připravit fotku k nahrání."));
           return;
         }
         resolve(blob);
       },
-      "image/webp",
+      mimeType,
       quality,
     );
   });
 }
 
-async function prepareImage(file: File) {
+async function prepareImage(file: Blob, resizedMimeType: "image/jpeg" | "image/webp") {
   let image: ImageBitmap | HTMLImageElement;
   if (typeof createImageBitmap === "function") {
     try {
@@ -93,7 +101,7 @@ async function prepareImage(file: File) {
     if ("close" in image) image.close();
     throw new Error("Fotka má neplatné rozměry.");
   }
-  if (file.size <= MAX_GALLERY_UPLOAD_BYTES) {
+  if (file.size <= MAX_GALLERY_UPLOAD_BYTES && Math.max(width, height) <= 2800) {
     if ("close" in image) image.close();
     return file;
   }
@@ -111,7 +119,7 @@ async function prepareImage(file: File) {
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
       for (const quality of qualities) {
-        const blob = await updateCanvasBlob(canvas, quality);
+        const blob = await updateCanvasBlob(canvas, quality, resizedMimeType);
         if (blob.size <= MAX_GALLERY_UPLOAD_BYTES) return blob;
       }
 
@@ -211,12 +219,19 @@ export default function GalleryUploader() {
         updateItem(item.key, { status: "preparing", progress: 0, message: "" });
 
         try {
-          const blob = await prepareImage(item.file);
           const mimeType = getSupportedMimeType(item.file);
-          if (!mimeType) throw new Error("Nepodporovaný typ. Vyberte fotku JPEG, PNG nebo WebP.");
+          if (!mimeType) {
+            throw new Error("Nepodporovaný typ. Vyberte fotku JPEG, PNG, WebP, HEIC nebo HEIF.");
+          }
+          const source = mimeType === HEIC_INPUT_MIME_TYPE
+            ? await convertHeicToJpeg(item.file)
+            : item.file;
+          const resizedMimeType = mimeType === HEIC_INPUT_MIME_TYPE ? "image/jpeg" : "image/webp";
+          const blob = await prepareImage(source, resizedMimeType);
           updateItem(item.key, { status: "uploading", progress: 0 });
 
-          const uploadFile = blob.type ? blob : new Blob([blob], { type: mimeType });
+          const uploadMimeType = mimeType === HEIC_INPUT_MIME_TYPE ? "image/jpeg" : mimeType;
+          const uploadFile = blob.type ? blob : new Blob([blob], { type: uploadMimeType });
           const response = await uploadBlob(uploadFile, (progress) => {
             updateItem(item.key, { progress });
           });
@@ -247,7 +262,8 @@ export default function GalleryUploader() {
       <div className="mb-5">
         <h2 className="text-xl font-semibold">Fotogalerie</h2>
         <p className="mt-1 text-sm text-stone-400">
-          Vyberte více fotek JPEG, PNG nebo WebP. Soubory nad 3,5 MB převedu do WebP a zmenším.
+          Vyberte více fotek JPEG, PNG, WebP, HEIC nebo HEIF. HEIC/HEIF ukládám vždy jako JPEG.
+          Ostatní fotky nad 3,5 MB nebo přes 2800 px zmenším a převedu do WebP.
         </p>
       </div>
 
@@ -256,7 +272,7 @@ export default function GalleryUploader() {
           <span>{isUploading ? "Nahrávám…" : "Přidat fotky"}</span>
           <input
             type="file"
-            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+            accept=".jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
             multiple
             disabled={isUploading}
             onChange={handleFileSelection}

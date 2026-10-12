@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
+    "heic-to": "1.6.6",
     "lucide-react": "^1.8.0",
     "next": "15.4.8",
     "radix-ui": "^1.4.3",
