@@ -88,6 +88,19 @@ test("a missing event poster is reported while its event remains visible", () =>
   ]);
 });
 
+test("GitHub event content keeps a newly saved poster before deployment includes its file", () => {
+  const event = {
+    id: "event-2026-10-17-posvicenska-zabava",
+    title: "Posvícenská zábava",
+    date: "2026-10-17",
+    location: "Doubravice",
+    posterPath: "/posters/new-upload-not-in-current-deployment.png",
+  };
+  const result = readEventContent([event], { checkPosterFiles: false });
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.events, [event]);
+});
+
 test("shorts require unique canonical YouTube IDs and explicit unique order", () => {
   const result = validateShorts([
     { id: "short-first", videoId: "iDQUGjGwNrs", order: 0 },

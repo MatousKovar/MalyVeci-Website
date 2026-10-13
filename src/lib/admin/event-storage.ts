@@ -150,7 +150,7 @@ export async function readManagedEventContent() {
     ? (await readGithubEvents()).events
     : await readLocalEvents();
 
-  return readEventContent(events);
+  return readEventContent(events, { checkPosterFiles: !usesGithubStorage() });
 }
 
 export async function findManagedEventById(id: string) {

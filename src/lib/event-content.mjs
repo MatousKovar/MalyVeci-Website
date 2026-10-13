@@ -5,13 +5,14 @@ import { validateEvents } from "./content-validation.mjs";
 
 /**
  * @param {unknown} [source]
+ * @param {{ checkPosterFiles?: boolean }} [options]
  * @returns {{ events: import("./content-types").EventContent[], errors: string[] }}
  */
-export function readEventContent(source = eventContent) {
+export function readEventContent(source = eventContent, { checkPosterFiles = true } = {}) {
   const { items, errors } = validateEvents(source);
   const events = items.map((event) => {
     if (
-      !event.posterPath ||
+      !checkPosterFiles || !event.posterPath ||
       existsSync(resolve(process.cwd(), "public", event.posterPath.slice(1)))
     ) {
       return event;
