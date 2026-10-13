@@ -5,14 +5,19 @@ import Image from "next/image";
 import galleryPhotos from "@/content/gallery.json";
 import { validateGalleryPhotos } from "@/lib/content-validation.mjs";
 import GalleryLightbox from "@/../components/ui/GalleryLightbox";
+import GalleryPhotoDelete from "@/app/admin/GalleryPhotoDelete";
+import type { GalleryPhotoContent } from "@/lib/content-types";
 
 const galleryContent = validateGalleryPhotos(galleryPhotos);
-const galleryImages = [...galleryContent.items].sort(
+const initialGalleryImages = [...galleryContent.items].sort(
   (first, second) => first.order - second.order,
 );
 
-export default function GallerySection() {
+export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [galleryImages, setGalleryImages] = useState(initialGalleryImages);
+  const [photoToDelete, setPhotoToDelete] = useState<GalleryPhotoContent | null>(null);
+  const [message, setMessage] = useState("");
 
   // Pás zdvojíme, aby se posouval nekonečně bez švu.
   const track = [...galleryImages, ...galleryImages];
@@ -25,6 +30,7 @@ export default function GallerySection() {
         <span className="text-black">FO</span>
         <span className="text-[#D90000]">TOGRAFIE</span>
       </h2>
+      {message && <p role="status" className="mb-6 px-5 text-center text-sm text-stone-300">{message}</p>}
 
       {galleryContent.errors.length > 0 && (
         <p role="alert" className="mx-auto mb-6 max-w-3xl px-5 text-center text-sm text-amber-200">
@@ -34,7 +40,7 @@ export default function GallerySection() {
 
       {galleryImages.length === 0 ? (
         <p className="text-center text-white/50">
-          Zatím tu nejsou žádné fotky – nahraj je do složky <code>public/gallery</code>.
+          Zatím tu nejsou žádné fotky.
         </p>
       ) : (
         <div
@@ -54,8 +60,8 @@ export default function GallerySection() {
             {track.map((img, i) => {
               const index = i % galleryImages.length;
               return (
+                <div key={`${img.id}-${i}`} className="shrink-0" aria-hidden={i >= galleryImages.length}>
                 <button
-                  key={i}
                   type="button"
                   aria-hidden={i >= galleryImages.length}
                   tabIndex={i >= galleryImages.length ? -1 : 0}
@@ -71,6 +77,17 @@ export default function GallerySection() {
                     className="h-full w-auto max-w-none saturate-[.92] transition duration-500 ease-out hover:scale-[1.04] hover:saturate-110"
                   />
                 </button>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    tabIndex={i >= galleryImages.length ? -1 : 0}
+                    onClick={() => { setOpenIndex(null); setPhotoToDelete(img); }}
+                    className="mt-2 block rounded-md border border-red-700 bg-stone-950 px-4 py-2 text-sm text-red-200 hover:bg-red-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-400"
+                  >
+                    Smazat fotku {index + 1}
+                  </button>
+                )}
+                </div>
               );
             })}
           </div>
@@ -83,6 +100,16 @@ export default function GallerySection() {
         onClose={() => setOpenIndex(null)}
         onNavigate={setOpenIndex}
       />
+      {isAdmin && photoToDelete && (
+        <GalleryPhotoDelete
+          photo={photoToDelete}
+          onClose={() => setPhotoToDelete(null)}
+          onDeleted={(id, message) => {
+            setGalleryImages((images) => images.filter((photo) => photo.id !== id));
+            setMessage(message);
+          }}
+        />
+      )}
     </section>
   );
 }

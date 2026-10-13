@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash, randomUUID } from "node:crypto";
-import { readFile, rename, unlink, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { readFile, readdir, readlink, rename, unlink, writeFile } from "node:fs/promises";
+import { basename, extname, resolve } from "node:path";
 import type { GalleryPhotoContent } from "@/lib/content-types";
 import { validateGalleryPhotos } from "@/lib/content-validation.mjs";
 import type { GalleryImageMimeType } from "@/lib/gallery-upload";
@@ -32,6 +32,20 @@ type GithubContent = {
 };
 
 type GithubError = Error & { status?: number; details?: string };
+
+type GithubTreeEntry = {
+  path: string;
+  mode: string;
+  type: string;
+  sha: string | null;
+};
+
+export class GalleryPhotoNotFoundError extends Error {
+  constructor() {
+    super("Vybraná fotka už v galerii není. Obnovte stránku.");
+    this.name = "GalleryPhotoNotFoundError";
+  }
+}
 
 export class GalleryUploadValidationError extends Error {
   constructor(message: string) {
@@ -106,7 +120,7 @@ function parseGallery(source: string): GalleryPhotoContent[] {
     !Array.isArray(parsed) ||
     result.items.length !== parsed.length
   ) {
-    throw new Error("Soubor galerie obsahuje neplatná data. Fotka nebyla přidána.");
+    throw new Error("Soubor galerie obsahuje neplatná data. Galerie nebyla změněna.");
   }
 
   return result.items;
@@ -325,6 +339,12 @@ async function writeLocalGallery(photos: GalleryPhotoContent[]) {
   }
 }
 
+function runLocalGalleryMutation<Result>(mutation: () => Promise<Result>) {
+  const result = localGalleryQueue.then(mutation, mutation);
+  localGalleryQueue = result.then(() => undefined, () => undefined);
+  return result;
+}
+
 async function addPhotoLocally(preparedPhoto: PreparedGalleryPhoto) {
   const addPhoto = async () => {
     const gallery = parseGallery(await readFile(galleryFilePath, "utf8"));
@@ -354,9 +374,7 @@ async function addPhotoLocally(preparedPhoto: PreparedGalleryPhoto) {
     return { alreadyExists: false };
   };
 
-  const result = localGalleryQueue.then(addPhoto, addPhoto);
-  localGalleryQueue = result.then(() => undefined, () => undefined);
-  return result;
+  return runLocalGalleryMutation(addPhoto);
 }
 
 async function getGithubSnapshot() {
@@ -382,9 +400,45 @@ async function getGithubSnapshot() {
   };
 }
 
-async function commitGithubPhoto(preparedPhoto: PreparedGalleryPhoto) {
-  const { branch } = getGithubConfiguration();
+function isConcurrentGithubUpdate(error: unknown) {
+  const githubError = error as GithubError;
+  return githubError.status === 409 ||
+    (githubError.status === 422 &&
+      /fast.?forward|reference.*update/i.test(githubError.details ?? ""));
+}
 
+async function commitGithubGallery(
+  snapshot: Awaited<ReturnType<typeof getGithubSnapshot>>,
+  photos: GalleryPhotoContent[],
+  imageChanges: GithubTreeEntry[],
+  message: string,
+) {
+  const { branch } = getGithubConfiguration();
+  const galleryBlob = await githubRequest<{ sha: string }>("/git/blobs", {
+    method: "POST",
+    body: JSON.stringify({ content: serializeGallery(photos), encoding: "utf-8" }),
+  });
+  const tree = await githubRequest<{ sha: string }>("/git/trees", {
+    method: "POST",
+    body: JSON.stringify({
+      base_tree: snapshot.tree,
+      tree: [
+        ...imageChanges,
+        { path: "src/content/gallery.json", mode: "100644", type: "blob", sha: galleryBlob.sha },
+      ],
+    }),
+  });
+  const commit = await githubRequest<{ sha: string }>("/git/commits", {
+    method: "POST",
+    body: JSON.stringify({ message, tree: tree.sha, parents: [snapshot.head] }),
+  });
+  await githubRequest("/git/refs/heads/" + encodeURIComponent(branch), {
+    method: "PATCH",
+    body: JSON.stringify({ sha: commit.sha, force: false }),
+  });
+}
+
+async function commitGithubPhoto(preparedPhoto: PreparedGalleryPhoto) {
   for (let attempt = 0; attempt < githubWriteAttempts; attempt += 1) {
     const snapshot = await getGithubSnapshot();
     const photo = createGalleryPhoto(preparedPhoto, getNextOrder(snapshot.photos));
@@ -398,60 +452,128 @@ async function commitGithubPhoto(preparedPhoto: PreparedGalleryPhoto) {
         encoding: "base64",
       }),
     });
-    const galleryBlob = await githubRequest<{ sha: string }>("/git/blobs", {
-      method: "POST",
-      body: JSON.stringify({
-        content: serializeGallery(photos),
-        encoding: "utf-8",
-      }),
-    });
-    const tree = await githubRequest<{ sha: string }>("/git/trees", {
-      method: "POST",
-      body: JSON.stringify({
-        base_tree: snapshot.tree,
-        tree: [
-          {
-            path: `public/gallery/${preparedPhoto.filename}`,
-            mode: "100644",
-            type: "blob",
-            sha: imageBlob.sha,
-          },
-          {
-            path: "src/content/gallery.json",
-            mode: "100644",
-            type: "blob",
-            sha: galleryBlob.sha,
-          },
-        ],
-      }),
-    });
-    const commit = await githubRequest<{ sha: string }>("/git/commits", {
-      method: "POST",
-      body: JSON.stringify({
-        message: `Přidat fotku do galerie ${preparedPhoto.filename}`,
-        tree: tree.sha,
-        parents: [snapshot.head],
-      }),
-    });
-
     try {
-      await githubRequest("/git/refs/heads/" + encodeURIComponent(branch), {
-        method: "PATCH",
-        body: JSON.stringify({ sha: commit.sha, force: false }),
-      });
+      await commitGithubGallery(snapshot, photos, [{
+        path: `public/gallery/${preparedPhoto.filename}`,
+        mode: "100644", type: "blob", sha: imageBlob.sha,
+      }], `Přidat fotku do galerie ${preparedPhoto.filename}`);
       return { alreadyExists: false };
     } catch (error) {
-      const githubError = error as GithubError;
-      const isConcurrentUpdate =
-        githubError.status === 409 ||
-        (githubError.status === 422 &&
-          /fast.?forward|reference.*update/i.test(githubError.details ?? ""));
-
-      if (!isConcurrentUpdate || attempt === githubWriteAttempts - 1) throw error;
+      if (!isConcurrentGithubUpdate(error) || attempt === githubWriteAttempts - 1) throw error;
     }
   }
 
   throw new Error("Nepodařilo se uložit fotku po souběžných změnách galerie.");
+}
+
+const referenceExtensions = new Set([
+  ".json", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".html", ".svg",
+]);
+
+function canContainImageReference(path: string) {
+  return path !== "src/content/gallery.json" &&
+    (path.startsWith("src/") || path.startsWith("components/") || path.startsWith("public/") || !path.includes("/")) &&
+    referenceExtensions.has(extname(path));
+}
+
+function referencesPhoto(source: string, photo: GalleryPhotoContent) {
+  const filename = basename(photo.src);
+  try {
+    source = JSON.stringify(JSON.parse(source));
+  } catch {
+    // Zdrojový kód a odkazy symbolických souborů nejsou JSON.
+  }
+  return source.includes(filename) || source.includes(encodeURIComponent(filename));
+}
+
+function removeSelectedPhoto(photos: GalleryPhotoContent[], id: string) {
+  const photo = photos.find((item) => item.id === id);
+  if (!photo) throw new GalleryPhotoNotFoundError();
+  return { photo, remaining: photos.filter((item) => item.id !== id) };
+}
+
+async function hasLocalImageReference(photo: GalleryPhotoContent) {
+  async function search(directory: string): Promise<boolean> {
+    const entries = await readdir(resolve(process.cwd(), directory), { withFileTypes: true });
+    for (const entry of entries) {
+      const path = directory ? `${directory}/${entry.name}` : entry.name;
+      if (entry.isDirectory() && ["src", "components", "public"].some((root) => path === root || path.startsWith(`${root}/`))) {
+        if (await search(path)) return true;
+      } else if (entry.isFile() && canContainImageReference(path)) {
+        if (referencesPhoto(await readFile(resolve(process.cwd(), path), "utf8"), photo)) return true;
+      } else if (entry.isSymbolicLink()) {
+        if (referencesPhoto(await readlink(resolve(process.cwd(), path)), photo)) return true;
+      }
+    }
+    return false;
+  }
+  return search("");
+}
+
+async function deletePhotoLocally(id: string) {
+  const deletePhoto = async () => {
+    const photos = parseGallery(await readFile(galleryFilePath, "utf8"));
+    const { photo, remaining } = removeSelectedPhoto(photos, id);
+    const keepImage = remaining.some((item) => item.src === photo.src) || await hasLocalImageReference(photo);
+    await writeLocalGallery(remaining);
+    if (!keepImage) {
+      try {
+        await unlink(resolve(galleryDirectory, basename(photo.src)));
+      } catch (error) {
+        if (!isRecord(error) || error.code !== "ENOENT") {
+          await writeLocalGallery(photos);
+          throw error;
+        }
+      }
+    }
+  };
+  await runLocalGalleryMutation(deletePhoto);
+}
+
+async function commitGithubPhotoDeletion(id: string) {
+  for (let attempt = 0; attempt < githubWriteAttempts; attempt += 1) {
+    const snapshot = await getGithubSnapshot();
+    const { photo, remaining } = removeSelectedPhoto(snapshot.photos, id);
+    const tree = await githubRequest<{ tree: GithubTreeEntry[]; truncated: boolean }>(
+      `/git/trees/${snapshot.tree}?recursive=1`,
+    );
+    if (tree.truncated) throw new Error("GitHub vrátil neúplný seznam souborů. Fotka nebyla smazána.");
+    let keepImage = remaining.some((item) => item.src === photo.src);
+    const referenceFiles = tree.tree.filter((entry) => entry.type === "blob" &&
+      (canContainImageReference(entry.path) || entry.mode === "120000"));
+    for (let offset = 0; !keepImage && offset < referenceFiles.length; offset += 8) {
+      const references = await Promise.all(referenceFiles.slice(offset, offset + 8).map(async (entry) => {
+        const blob = await githubRequest<GithubContent>(`/git/blobs/${entry.sha}`);
+        if (blob.encoding !== "base64" || typeof blob.content !== "string") {
+          throw new Error("Nepodařilo se ověřit odkazy na fotku. Galerie nebyla změněna.");
+        }
+        return referencesPhoto(Buffer.from(blob.content, "base64").toString("utf8"), photo);
+      }));
+      keepImage = references.some(Boolean);
+    }
+    const imagePath = `public${photo.src}`;
+    const image = tree.tree.find((entry) => entry.path === imagePath);
+    const imageChanges: GithubTreeEntry[] = !keepImage && image
+      ? [{ path: imagePath, mode: image.mode, type: "blob", sha: null }]
+      : [];
+    try {
+      await commitGithubGallery(snapshot, remaining, imageChanges, `Smazat fotku galerie ${id}`);
+      return;
+    } catch (error) {
+      if (!isConcurrentGithubUpdate(error) || attempt === githubWriteAttempts - 1) throw error;
+    }
+  }
+}
+
+export async function deleteManagedGalleryPhoto(id: string) {
+  if (usesGithubStorage()) await commitGithubPhotoDeletion(id);
+  else await deletePhotoLocally(id);
+  return {
+    id,
+    message: usesGithubStorage()
+      ? "Fotka je odebraná. Z veřejného webu zmizí po dokončení nasazení."
+      : "Fotka je smazaná z galerie.",
+  };
 }
 
 export async function addManagedGalleryPhoto(bytes: Buffer, contentType: string | null) {

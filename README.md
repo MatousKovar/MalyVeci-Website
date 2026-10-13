@@ -32,6 +32,8 @@ Pro zápis z produkčního adminu nastav ve Vercelu `GITHUB_REPOSITORY` na `Mato
 
 The app stores only a scrypt password hash. After a successful login, it signs an HttpOnly, SameSite cookie that expires after 30 days. Write actions call `requireAdminSession()` from `src/lib/admin/session.ts` before changing data.
 
+Přihlášený správce může na hlavní stránce smazat jednotlivou fotku galerie. Smazání vyžaduje potvrzení s náhledem. Odstraní se záznam z `gallery.json`; obrázkový soubor zůstane zachovaný, pokud na něj odkazuje jiná fotka nebo další obsah webu. V produkci se změna uloží jedním commitem přes GitHub API a veřejný web ji zobrazí po dokončení nasazení. Na preview nasazeních je mazání zakázané.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
