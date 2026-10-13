@@ -1,7 +1,5 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { readFile, rename, unlink, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import type {
   EventCreateFields,
   EventUpdateFields,
@@ -9,9 +7,17 @@ import type {
 import type { EventContent } from "@/lib/content-types";
 import { validateEvents } from "@/lib/content-validation.mjs";
 import { readEventContent } from "@/lib/event-content.mjs";
+import { runLocalEventMutation } from "@/lib/admin/event-write-queue.mjs";
+import {
+  getGithubConfiguration,
+  githubApiVersion,
+  parseEventsContent,
+  readLocalEvents,
+  serializeEvents,
+  usesGithubStorage,
+  writeLocalEvents,
+} from "@/lib/admin/event-file.mjs";
 
-const eventFilePath = resolve(process.cwd(), "src/content/events.json");
-const githubApiVersion = "2026-03-10";
 const githubWriteAttempts = 3;
 
 type GithubContent = {
@@ -21,27 +27,6 @@ type GithubContent = {
 };
 
 type EventMutation<Result> = (events: EventContent[]) => Result;
-
-function usesGithubStorage() {
-  return process.env.VERCEL === "1";
-}
-
-function getGithubConfiguration() {
-  const repository = process.env.GITHUB_REPOSITORY;
-  const token = process.env.GITHUB_CONTENTS_TOKEN;
-
-  if (!repository || !/^[^/]+\/[^/]+$/.test(repository) || !token) {
-    throw new Error("GitHub content storage is not configured.");
-  }
-
-  const [owner, name] = repository.split("/");
-  return {
-    owner,
-    name,
-    token,
-    branch: process.env.GITHUB_CONTENTS_BRANCH || "main",
-  };
-}
 
 export function hasEventStorageConfiguration() {
   if (!usesGithubStorage()) return true;
@@ -80,22 +65,6 @@ async function requestGithubContent() {
   return response.json() as Promise<GithubContent>;
 }
 
-function parseEventsContent(source: string): EventContent[] {
-  const parsed: unknown = JSON.parse(source);
-  const result = validateEvents(parsed);
-
-  if (result.errors.length > 0 || !Array.isArray(parsed) || result.items.length !== parsed.length) {
-    throw new Error("The events JSON contains invalid data and was not changed.");
-  }
-
-  return result.items;
-}
-
-async function readLocalEvents() {
-  const source = await readFile(eventFilePath, "utf8");
-  return parseEventsContent(source);
-}
-
 async function readGithubEvents() {
   const content = await requestGithubContent();
   if (content.encoding !== "base64" || typeof content.content !== "string") {
@@ -106,22 +75,6 @@ async function readGithubEvents() {
     events: parseEventsContent(Buffer.from(content.content, "base64").toString("utf8")),
     sha: content.sha,
   };
-}
-
-function serializeEvents(events: EventContent[]) {
-  return `${JSON.stringify(events, null, 2)}\n`;
-}
-
-async function writeLocalEvents(events: EventContent[]) {
-  const temporaryPath = `${eventFilePath}.${randomUUID()}.tmp`;
-  await writeFile(temporaryPath, serializeEvents(events), { flag: "wx" });
-
-  try {
-    await rename(temporaryPath, eventFilePath);
-  } catch (error) {
-    await unlink(temporaryPath).catch(() => undefined);
-    throw error;
-  }
 }
 
 async function writeGithubEvents(events: EventContent[], sha: string, message: string) {
@@ -153,12 +106,14 @@ async function mutateEvents<Result>(
   commitMessage: string,
 ) {
   if (!usesGithubStorage()) {
-    const events = await readLocalEvents();
-    const updatedEvents = [...events];
-    const result = mutation(updatedEvents);
-    validateMutationResult(updatedEvents);
-    await writeLocalEvents(updatedEvents);
-    return result;
+    return runLocalEventMutation(async () => {
+      const events = await readLocalEvents();
+      const updatedEvents = [...events];
+      const result = mutation(updatedEvents);
+      validateMutationResult(updatedEvents);
+      await writeLocalEvents(updatedEvents);
+      return result;
+    });
   }
 
   for (let attempt = 0; attempt < githubWriteAttempts; attempt += 1) {

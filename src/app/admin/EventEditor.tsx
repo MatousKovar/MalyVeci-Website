@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import type { ManagedEvent } from "@/lib/events";
 import type { EventEditorActionState } from "@/lib/admin/event-update.mjs";
 import { createEvent, deleteEvent, updateEvent } from "./actions";
+import EventPosterEditor from "./EventPosterEditor";
 
 type EventEditorProps = {
   events: ManagedEvent[];
@@ -235,7 +236,7 @@ export default function EventEditor({ events, today, onClose }: EventEditorProps
         <div>
           <h3 className="text-xl font-semibold">Správa akcí</h3>
           <p className="mt-1 text-sm text-stone-400">
-            Plakát existující akce zůstává beze změny.
+            Upravte údaje akce nebo její plakát.
           </p>
         </div>
         {onClose && (
@@ -298,6 +299,7 @@ export default function EventEditor({ events, today, onClose }: EventEditorProps
             submitLabel="Uložit změny"
             onSaved={handleSaved}
           />
+          <EventPosterEditor key={`poster-${selectedEvent.id}`} event={selectedEvent} />
           <DeleteEventForm key={`delete-${selectedEvent.id}`} event={selectedEvent} />
         </>
       ) : (

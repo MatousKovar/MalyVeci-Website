@@ -9,7 +9,7 @@ test("a stale configuration error is hidden when admin settings are valid", () =
 test("a configuration error is shown while admin settings are invalid", () => {
   assert.equal(
     getAdminErrorMessage("config", false),
-    "Přihlášení správce není nakonfigurované.",
+    "Správa není správně nakonfigurovaná. Zkontrolujte její přihlašovací údaje a úložiště.",
   );
 });
 
@@ -17,7 +17,7 @@ test("a failed password is reported only when admin settings are valid", () => {
   assert.equal(getAdminErrorMessage("invalid", true), "Heslo není správné.");
   assert.equal(
     getAdminErrorMessage("invalid", false),
-    "Přihlášení správce není nakonfigurované.",
+    "Správa není správně nakonfigurovaná. Zkontrolujte její přihlašovací údaje a úložiště.",
   );
 });
 
