@@ -1,12 +1,17 @@
 "use client";
 import { Calendar } from "@/../components/ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { TZDate } from "react-day-picker";
 import EventListItem from "../ui/EventListItem";
-import { format } from "date-fns/format";
-import { parseISO } from "date-fns/parseISO";
 import { cs } from "date-fns/locale";
 import type { ManagedEvent } from "@/lib/events";
 import EventEditor from "@/app/admin/EventEditor";
+import { getTodayInPrague } from "@/lib/admin/event-update.mjs";
+
+function calendarDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new TZDate(year, month - 1, day, "Europe/Prague");
+}
 
 
 type EventsSectionProps = {
@@ -26,36 +31,56 @@ export default function EventsSection({
   showPosterFunction,
 }: EventsSectionProps) {
 
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [currentToday, setCurrentToday] = useState(today);
+  const todayDate = calendarDate(currentToday);
+  const [date, setDate] = useState<Date | undefined>(() => calendarDate(today));
+  const [month, setMonth] = useState<Date>(() => calendarDate(today));
+
+  useEffect(() => {
+    const updateToday = () => setCurrentToday(getTodayInPrague());
+    updateToday();
+    const interval = window.setInterval(updateToday, 30_000);
+    window.addEventListener("focus", updateToday);
+    document.addEventListener("visibilitychange", updateToday);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", updateToday);
+      document.removeEventListener("visibilitychange", updateToday);
+    };
+  }, []);
 
   const [highlightedDate, setHighlightedDate] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   // logika pro propojeni kalendare s listem vpravo
-  const eventDates = events.map((event) => parseISO(event.date));
+  const upcomingEvents = events.filter((event) => event.date >= currentToday);
+  const eventDates = upcomingEvents.map((event) => calendarDate(event.date));
   const handleDateSelect = (selectedDate: Date | undefined) => {
-  setDate(selectedDate);
-  
-  if (selectedDate) {
-    const dateId = format(selectedDate, "yyyy-MM-dd");
+    if (!selectedDate) {
+      setDate(undefined);
+      return;
+    }
+    const dateId = getTodayInPrague(selectedDate);
+    if (dateId < getTodayInPrague()) return;
+    setDate(selectedDate);
+
     const element = document.querySelector<HTMLElement>(
       `[data-event-date="${dateId}"]`,
     );
-    
+
     if (element) {
-      element.scrollIntoView({ 
-        behavior: "smooth", 
-        block: "nearest" 
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
       });
 
       setHighlightedDate(dateId);
 
       setTimeout(() => {
-          setHighlightedDate(null);
-        }, 4000);
+        setHighlightedDate(null);
+      }, 4000);
     }
-  }
-};
+  };
 
   return (
     <section id="Akce" className="py-20 text-center bg-black z-100">
@@ -78,7 +103,7 @@ export default function EventsSection({
       {isAdmin && isEditorOpen && (
         <EventEditor
           events={events}
-          today={today}
+          today={currentToday}
           onClose={() => setIsEditorOpen(false)}
         />
       )}
@@ -88,12 +113,19 @@ export default function EventsSection({
           <Calendar
             mode="single"
             weekStartsOn={1}
-            selected={date}
+            timeZone="Europe/Prague"
+            today={todayDate}
+            month={getTodayInPrague(month).slice(0, 7) < currentToday.slice(0, 7) ? todayDate : month}
+            onMonthChange={setMonth}
+            startMonth={todayDate}
+            disabled={{ before: todayDate }}
+            selected={date && getTodayInPrague(date) >= currentToday ? date : undefined}
             onSelect={handleDateSelect}
             locale={cs}
             // Vracím sem i tmavé styly, aby to ladilo s webem
             className="rounded-lg border bg-stone-900/30 text-white border-stone-800 w-full h-full"
             captionLayout="dropdown"
+            classNames={{ disabled: "text-stone-500 opacity-50 [&_button]:cursor-not-allowed" }}
             modifiers={{ event: eventDates }}
             // Styly pro tento modifier (tečka pod číslem)
             modifiersClassNames={{
@@ -112,8 +144,8 @@ export default function EventsSection({
               </ul>
             </div>
           )}
-          {events.length > 0 ? (
-            events.map((event) => {
+          {upcomingEvents.length > 0 ? (
+            upcomingEvents.map((event) => {
               return (
                 <EventListItem
                   key={event.id}
