@@ -3,19 +3,22 @@
 import { useState } from "react";
 import shorts from "@/content/shorts.json";
 import { validateShorts } from "@/lib/content-validation.mjs";
-import { getYouTubeId } from "../ui/youtube";
+import type { ShortContent } from "@/lib/content-types";
+import ShortVideoDelete from "@/app/admin/ShortVideoDelete";
 import ShortsCarousel from "../ui/ShortsCarousel";
 import ReelsModal from "../ui/ReelsModal";
 
 const shortsContent = validateShorts(shorts);
 const youtubeShorts = [...shortsContent.items]
-  .sort((first, second) => first.order - second.order)
-  .map((short) => short.videoId);
+  .sort((first, second) => first.order - second.order);
 
-export default function VideosSection() {
+export default function VideosSection({ isAdmin = false }: { isAdmin?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const ids = youtubeShorts.map(getYouTubeId);
+  const [videos, setVideos] = useState(youtubeShorts);
+  const [videoToDelete, setVideoToDelete] = useState<ShortContent | null>(null);
+  const [message, setMessage] = useState("");
+  const ids = videos.map((video) => video.videoId);
   // Na který reel má carousel při načtení vycentrovat (fallback = první).
   const startIndex = Math.max(ids.indexOf("iDQUGjGwNrs"), 0);
 
@@ -48,18 +51,38 @@ export default function VideosSection() {
         .
       </p>
 
+      {message && <p role="status" className="mb-6 px-5 text-center text-sm text-stone-300">{message}</p>}
       {shortsContent.errors.length > 0 && (
         <p role="alert" className="mx-auto mb-6 max-w-3xl px-5 text-center text-sm text-amber-200">
           Některá krátká videa se nepodařilo načíst. {shortsContent.errors.join(" ")}
         </p>
       )}
       {ids.length > 0 ? (
-        <ShortsCarousel ids={ids} onOpen={(i) => setOpenIndex(i)} initialIndex={startIndex} />
+        <ShortsCarousel
+          ids={ids}
+          onOpen={(i) => setOpenIndex(i)}
+          initialIndex={startIndex}
+          onDelete={isAdmin ? (index) => {
+            setOpenIndex(null);
+            setVideoToDelete(videos[index]);
+          } : undefined}
+        />
       ) : (
         <p className="text-center text-stone-400">Zatím tu nejsou žádná krátká videa.</p>
       )}
 
       <ReelsModal ids={ids} index={openIndex} onClose={() => setOpenIndex(null)} />
+      {isAdmin && videoToDelete && (
+        <ShortVideoDelete
+          video={videoToDelete}
+          onClose={() => setVideoToDelete(null)}
+          onDeleted={(id, message) => {
+            setOpenIndex(null);
+            setVideos((items) => items.filter((video) => video.id !== id));
+            setMessage(message);
+          }}
+        />
+      )}
     </section>
   );
 }

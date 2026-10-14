@@ -8,9 +8,10 @@ type ShortsCarouselProps = {
   ids: string[];
   onOpen: (index: number) => void;
   initialIndex?: number;
+  onDelete?: (index: number) => void;
 };
 
-export default function ShortsCarousel({ ids, onOpen, initialIndex = 0 }: ShortsCarouselProps) {
+export default function ShortsCarousel({ ids, onOpen, initialIndex = 0, onDelete }: ShortsCarouselProps) {
   const n = ids.length;
   const [active, setActive] = useState(initialIndex);
   const dragX = useRef<number | null>(null);
@@ -80,37 +81,55 @@ export default function ShortsCarousel({ ids, onOpen, initialIndex = 0 }: Shorts
           const d = deltaOf(i);
           const isCenter = d === 0;
           return (
-            <button
+            <div
               key={`${id}-${i}`}
-              type="button"
-              onClick={() => (isCenter ? onOpen(i) : setActive(i))}
-              aria-label={isCenter ? "Přehrát short" : "Přejít na tento short"}
               style={styleFor(d)}
-              className="group absolute inset-0 m-auto aspect-[9/16] h-[400px] overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/10 transition-all duration-500 ease-out sm:h-[460px]"
+              className="absolute inset-0 m-auto aspect-[9/16] h-[400px] transition-all duration-500 ease-out sm:h-[460px]"
             >
-              {/* Svislý HD náhled shortu */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={ytThumb(id)}
-                alt=""
-                loading="lazy"
-                onError={(e) => handleThumbError(e, id)}
-                className="h-full w-full object-cover"
-                draggable={false}
-              />
-              {/* Ztmavení bočních (vzadu) + spodní gradient pod play */}
-              <div
-                className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${
-                  isCenter ? "bg-gradient-to-t from-black/40 via-transparent to-transparent" : "bg-black/30"
-                }`}
-              />
-              {/* Play jen na středu */}
-              {isCenter && (
-                <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#D90000]/90 text-white shadow-lg transition duration-300 group-hover:scale-110 group-hover:bg-[#D90000]">
-                  <Play size={30} className="ml-0.5 fill-current" />
-                </span>
+              <button
+                type="button"
+                onClick={() => (isCenter ? onOpen(i) : setActive(i))}
+                aria-label={isCenter ? "Přehrát short" : "Přejít na tento short"}
+                tabIndex={isCenter ? 0 : -1}
+                className="group relative h-full w-full overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/10"
+              >
+                {/* Svislý HD náhled shortu */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={ytThumb(id)}
+                  alt=""
+                  loading="lazy"
+                  onError={(e) => handleThumbError(e, id)}
+                  className="h-full w-full object-cover"
+                  draggable={false}
+                />
+                {/* Ztmavení bočních (vzadu) + spodní gradient pod play */}
+                <div
+                  className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${
+                    isCenter ? "bg-gradient-to-t from-black/40 via-transparent to-transparent" : "bg-black/30"
+                  }`}
+                />
+                {/* Play jen na středu */}
+                {isCenter && (
+                  <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#D90000]/90 text-white shadow-lg transition duration-300 group-hover:scale-110 group-hover:bg-[#D90000]">
+                    <Play size={30} className="ml-0.5 fill-current" />
+                  </span>
+                )}
+              </button>
+              {onDelete && (
+                <button
+                  type="button"
+                  tabIndex={isCenter ? 0 : -1}
+                  aria-label={`Smazat krátké video ${i + 1}`}
+                  onPointerDown={(event) => event.stopPropagation()}
+                  onPointerUp={(event) => event.stopPropagation()}
+                  onClick={() => onDelete(i)}
+                  className="absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-red-700 bg-stone-950 px-4 py-2 text-sm text-red-200 hover:bg-red-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-400"
+                >
+                  Smazat video
+                </button>
               )}
-            </button>
+            </div>
           );
         })}
       </div>

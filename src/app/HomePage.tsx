@@ -77,7 +77,7 @@ export default function HomePage({
           showPosterFunction={(src) => setPoster(src)}
         />
         <GallerySection isAdmin={isAdmin} />
-        <VideosSection />
+        <VideosSection isAdmin={isAdmin} />
         <RepertoarSection />
         <ContactsSection />
 

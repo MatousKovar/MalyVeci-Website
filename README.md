@@ -34,6 +34,8 @@ The app stores only a scrypt password hash. After a successful login, it signs a
 
 Přihlášený správce může na hlavní stránce smazat jednotlivou fotku galerie. Smazání vyžaduje potvrzení s náhledem. Odstraní se záznam z `gallery.json`; obrázkový soubor zůstane zachovaný, pokud na něj odkazuje jiná fotka nebo další obsah webu. V produkci se změna uloží jedním commitem přes GitHub API a veřejný web ji zobrazí po dokončení nasazení. Na preview nasazeních je mazání zakázané.
 
+Přihlášený správce může u každého krátkého videa otevřít potvrzení s náhledem a odkazem na YouTube. Smazání odebere pouze vybraný záznam ze `shorts.json` a zachová pořadí ostatních videí. Na YouTube video zůstane. V produkci se změna uloží přes GitHub API a veřejný web ji zobrazí po nasazení. Na preview nasazeních je mazání zakázané.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
