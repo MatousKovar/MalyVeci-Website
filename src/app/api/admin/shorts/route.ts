@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
-import { deleteManagedShortVideo, ShortVideoNotFoundError } from "@/lib/admin/short-storage";
+import { addManagedShortVideo, deleteManagedShortVideo, ShortVideoInputError, ShortVideoNotFoundError } from "@/lib/admin/short-storage";
 import {
   AdminUnauthorizedError,
   requireAdminSession,
@@ -41,5 +41,38 @@ export async function DELETE(request: Request) {
     }
     console.error("Failed to delete short video:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ message: "Krátké video se nepodařilo smazat. Zkuste to znovu." }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    await requireAdminSession();
+  } catch (error) {
+    if (error instanceof AdminUnauthorizedError) {
+      return NextResponse.json({ message: "Přihlášení správce vypršelo." }, { status: 401 });
+    }
+    throw error;
+  }
+  if (process.env.VERCEL === "1" && process.env.VERCEL_ENV !== "production") {
+    return NextResponse.json({ message: "Přidávání krátkých videí je dostupné jen na produkčním webu." }, { status: 403 });
+  }
+  let input: unknown;
+  try {
+    const body: unknown = await request.json();
+    input = typeof body === "object" && body !== null && "input" in body ? body.input : undefined;
+  } catch {
+    return NextResponse.json({ message: "Požadavek na přidání krátkého videa není platný." }, { status: 400 });
+  }
+  try {
+    const result = await addManagedShortVideo(input);
+    revalidatePath("/");
+    revalidatePath("/admin");
+    return NextResponse.json(result, { status: 201 });
+  } catch (error) {
+    if (error instanceof ShortVideoInputError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
+    console.error("Failed to add short video:", error instanceof Error ? error.message : "Unknown error");
+    return NextResponse.json({ message: "Krátké video se nepodařilo uložit. Zkuste to znovu." }, { status: 500 });
   }
 }

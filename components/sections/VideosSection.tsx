@@ -4,6 +4,7 @@ import { useState } from "react";
 import shorts from "@/content/shorts.json";
 import { validateShorts } from "@/lib/content-validation.mjs";
 import type { ShortContent } from "@/lib/content-types";
+import ShortVideoAdd from "@/app/admin/ShortVideoAdd";
 import ShortVideoDelete from "@/app/admin/ShortVideoDelete";
 import ShortsCarousel from "../ui/ShortsCarousel";
 import ReelsModal from "../ui/ReelsModal";
@@ -51,6 +52,14 @@ export default function VideosSection({ isAdmin = false }: { isAdmin?: boolean }
         .
       </p>
 
+      {isAdmin && (
+        <ShortVideoAdd onAdded={(video, message, pendingDeployment) => {
+          if (!pendingDeployment) {
+            setVideos((items) => [...items, video].sort((first, second) => first.order - second.order));
+          }
+          setMessage(message);
+        }} />
+      )}
       {message && <p role="status" className="mb-6 px-5 text-center text-sm text-stone-300">{message}</p>}
       {shortsContent.errors.length > 0 && (
         <p role="alert" className="mx-auto mb-6 max-w-3xl px-5 text-center text-sm text-amber-200">
