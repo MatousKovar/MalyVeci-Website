@@ -151,7 +151,6 @@ export default function Navbar() {
                   Chci vás na akci <ArrowUpRight size={20} aria-hidden="true" className="shrink-0" />
                 </a>
                 <div className="flex flex-wrap items-center justify-between gap-x-3 pt-2 text-xs text-stone-400">
-                  <span>Malý Věci. Velkej zvuk.</span>
                   <a href="/admin" className="inline-flex min-h-11 items-center text-stone-300 underline underline-offset-4 hover:text-white">Správa webu</a>
                 </div>
               </div>
