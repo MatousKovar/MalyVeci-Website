@@ -26,6 +26,14 @@ Veřejný web čte akce z `src/content/events.json`. Admin při místním vývoj
 
 Pro zápis z produkčního adminu nastav ve Vercelu `GITHUB_REPOSITORY` na `MatousKovar/MalyVeci-Website` a `GITHUB_CONTENTS_TOKEN` na fine-grained personal access token omezený na tento repozitář s oprávněním `Contents: Read and write`. Proměnné přidej jen do Production. `GITHUB_CONTENTS_BRANCH` může určit jinou cílovou větev; výchozí hodnota je `main`. Token uchovávej jako neveřejnou proměnnou. GitHub vyžaduje pro vytvoření nebo změnu souboru v repozitáři oprávnění `Contents: write` ([GitHub REST API](https://docs.github.com/en/rest/repos/contents#fine-grained-access-tokens-for-create-or-update-file-contents)).
 
+## Denní úklid akcí
+
+Vercel spouští `/api/cron/events` denně v 03:00 UTC, tedy ve 04:00 českého zimního času nebo v 05:00 letního času. Pro Production nastavte neveřejnou proměnnou `CRON_SECRET` na náhodnou tajnou hodnotu a nasaďte změnu. Vercel ji posílá v hlavičce `Authorization: Bearer <CRON_SECRET>`, viz [zabezpečení cronu](https://vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs). Úloha používá stejné proměnné `GITHUB_*` jako správa obsahu. Preview nasazení zápis odmítá.
+
+Úklid odstraňuje pouze akce před dneškem v `Europe/Prague`. Záznamy a nepoužívané plakáty publikuje jedním commitem, po kterém Vercel nasadí změnu. Plakáty používané jiným obsahem zůstávají. Neplatné položky zachová a zapíše jejich počet do logu, ostatní akce zpracuje. Opakovaný běh bez minulých akcí nevytváří commit. Veřejný seznam skrývá minulé akce i před během úklidu.
+
+Ověřovací běh lze spustit požadavkem GET na tento endpoint se stejnou autorizační hlavičkou. Jde o skutečný úklid, který může odstranit proběhlé akce. Odpověď a log uvádějí datum, počet odstraněných akcí a plakátů a počet chyb, nikoli tajné hodnoty.
+
 ## Admin login
 
 `/admin` accepts one shared admin password. Run `npm run admin:secrets` to choose it. The script hides the password while you type, writes its scrypt hash and a signing secret to `.env.local`, and never prints either value. Restart the dev server to load them. For Vercel, copy `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` from `.env.local` into the project environment variables, then redeploy. Add them to Production and Preview only if those deployments should allow admin login.

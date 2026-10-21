@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { readFile, readdir, readlink, lstat, mkdir, realpath, unlink, writeFile } from "node:fs/promises";
-import { basename, extname, resolve, sep } from "node:path";
+import { lstat, mkdir, realpath, unlink, writeFile } from "node:fs/promises";
+import { extname, resolve } from "node:path";
 import sharp from "sharp";
 import { eventsPath, getGithubConfiguration, githubApiVersion, parseEventsContent, readLocalEvents, serializeEvents, usesGithubStorage, writeLocalEvents } from "./event-file.mjs";
 import { runLocalEventMutation } from "./event-write-queue.mjs";
+import { localHasReference, publicFile, references, textExtensions } from "./poster-references.mjs";
 
 export const MAX_POSTER_UPLOAD_BYTES = 3_500_000;
 const formats = { jpeg: { type: "image/jpeg", extension: "jpg" }, png: { type: "image/png", extension: "png" }, webp: { type: "image/webp", extension: "webp" } };
-const textExtensions = new Set([".json", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".html", ".svg", ".md"]);
 
 export class PosterValidationError extends Error {}
 
@@ -36,37 +36,6 @@ function changePoster(events, id, poster) {
   if (poster) event.posterPath = poster.path;
   else delete event.posterPath;
   return oldPath;
-}
-
-function references(source, imagePath) {
-  try { source = JSON.stringify(JSON.parse(source)); } catch { /* Plain text */ }
-  const filename = basename(imagePath);
-  return source.includes(filename) || source.includes(encodeURIComponent(filename));
-}
-
-function publicFile(root, imagePath) {
-  if (typeof imagePath !== "string" || !imagePath.startsWith("/") || imagePath.startsWith("//") || /[\\%?#]/.test(imagePath) || imagePath.split("/").some((part) => part === ".." || part === ".")) return undefined;
-  const directory = resolve(root, "public");
-  const file = resolve(directory, `.${imagePath}`);
-  return file.startsWith(`${directory}${sep}`) ? file : undefined;
-}
-
-async function localHasReference(root, imagePath) {
-  async function search(directory) {
-    for (const entry of await readdir(resolve(root, directory), { withFileTypes: true })) {
-      if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
-      const path = directory ? `${directory}/${entry.name}` : entry.name;
-      if (entry.isSymbolicLink()) {
-        if (references(await readlink(resolve(root, path)), imagePath)) return true;
-      } else if (entry.isDirectory()) {
-        if (await search(path)) return true;
-      } else if (entry.isFile() && path !== eventsPath && textExtensions.has(extname(path))) {
-        if (references(await readFile(resolve(root, path), "utf8"), imagePath)) return true;
-      }
-    }
-    return false;
-  }
-  return search("");
 }
 
 async function changeLocally(root, id, poster) {

@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   // Produkční API ukládá média přes GitHub; public obsluhuje Vercel jako statické soubory.
   outputFileTracingExcludes: {
     "/api/admin/*": ["./public/**/*"],
+    "/api/cron/*": ["./public/**/*"],
   },
 };
 
