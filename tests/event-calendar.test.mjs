@@ -129,3 +129,25 @@ test("a list containing only past akce shows the empty state", () => {
   assert.match(html, /Zatím tu nejsou žádné naplánované akce\./);
   assert.doesNotMatch(html, /data-event-date=/);
 });
+
+test("calendar can navigate beyond December of the current year", () => {
+  const html = render("2026-12-15", ["2027-01-10"]);
+  const next = html.match(/<button[^>]*aria-label="Go to the Next Month"[^>]*>/)?.[0];
+  assert.ok(next);
+  assert.doesNotMatch(next, /aria-disabled="true"| disabled=""/);
+  const years = html.match(/<select[^>]*aria-label="Choose the Year"[^>]*>([\s\S]*?)<\/select>/)?.[1];
+  assert.ok(years);
+  assert.match(years, /value="2027"/);
+  assert.match(years, /value="2036"/);
+});
+
+test("future navigation advances with the current year", () => {
+  const html = render("2027-12-15", []);
+  const years = html.match(/<select[^>]*aria-label="Choose the Year"[^>]*>([\s\S]*?)<\/select>/)?.[1];
+  assert.ok(years);
+  assert.match(years, /value="2037"/);
+  assert.doesNotMatch(years, /value="2026"/);
+  const next = html.match(/<button[^>]*aria-label="Go to the Next Month"[^>]*>/)?.[0];
+  assert.ok(next);
+  assert.doesNotMatch(next, /aria-disabled="true"| disabled=""/);
+});

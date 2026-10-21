@@ -118,6 +118,7 @@ export default function EventsSection({
             month={getTodayInPrague(month).slice(0, 7) < currentToday.slice(0, 7) ? todayDate : month}
             onMonthChange={setMonth}
             startMonth={todayDate}
+            endMonth={new TZDate(todayDate.getFullYear() + 10, 11, 31, "Europe/Prague")}
             disabled={{ before: todayDate }}
             selected={date && getTodayInPrague(date) >= currentToday ? date : undefined}
             onSelect={handleDateSelect}
