@@ -1,5 +1,5 @@
 
-import matous from "../../public/matous.jpeg";
+import matous from "../../public/matous-preview.jpeg";
 import mates from "../../public/mates.jpeg";
 import jiri from "../../public/jirka.jpeg";
 import roubalka from "../../public/denca.jpeg";
