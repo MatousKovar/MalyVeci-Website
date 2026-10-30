@@ -1,9 +1,9 @@
 
-import matous from "../../public/ja.jpg";
-import mates from "../../public/basak.jpeg";
-import jiri from "../../public/2.png";
-import roubalka from "../../public/roubalka.jpg";
-import prokop from "../../public/prokop.jpeg";
+import matous from "../../public/matous.jpeg";
+import mates from "../../public/mates.jpeg";
+import jiri from "../../public/jirka.jpeg";
+import roubalka from "../../public/denca.jpeg";
+import prokop from "../../public/peta.jpeg";
 import { StaticImageData } from "next/image";
 
 
@@ -17,31 +17,31 @@ export const members: Member [] = [
   {
       name: "Denisa Roubalová",
       role: "Zpěv",
-      bio: "Hlavní hlas kapely a královna pódiové energie. Stará se o sociální sítě i vizuální styl kapely a na pódiu kombinuje zpěv s tancem, takže se publikum nikdy nenudí.",
+      bio: "Hlavní hlas kapely a královna pódia. Stará se o sociální sítě i vizuální styl kapely.",
       image: roubalka,
   },
   {
     name: "Matouš Kovář",
     role: "Sólová kytara",
-    bio: "Kapelník, zvukař a tahoun celé kapely. Řídí zkoušky i koncerty, dohlíží na zvuk a zároveň přidává kytarová sóla, která dávají našim vystoupením drive.",
+    bio: "Kapelník, zvukař a tahoun celé kapely. Řídí zkoušky i koncerty, dohlíží na zvuk v kapele hraje na kytaru a zpívá.",
     image: matous,
   },
   {
     name: "Jiří Bártík",
     role: "Rytmická kytara",
-    bio: "Rytmická jistota a autor vizuálů kapely. Stará se o plakáty i grafiku, na pódiu přidává kytaru a vlastní nápady, které dodávají koncertům originální náboj.",
+    bio: "Rytmický kytarista a zpěvák, který kromě hraní zvládne udělat i originální plakáty.",
     image: jiri,
   },
   {
     name: "Matyáš Fojtů",
     role: "Basa",
-    bio: "Basák, bavič a moderátor večerů. Jeho rytmus drží kapelu pohromadě a jeho hlášky i improvizace baví publikum stejně jako hudba.",
+    bio: "Basák, bavič a moderátor večerů. bez jeho vtipů bychom se na cestách nudili.",
     image: mates,
   },
   {
     name: "Petr Roubal",
     role: "Bicí",
-    bio: "Metronom, který drží pevné tempo a udává energii celé kapele. Kromě bubnů má na starosti i tvorbu setlistů a s Denisou tvoří vokální duo, které dodává koncertům další rozměr.",
+    bio: "Metronom, který drží pevné tempo celé kapele. Kromě bubnů má na starosti i tvorbu setlistů a je vrchním autobusákem kapely.",
     image: prokop,
   },
 ];

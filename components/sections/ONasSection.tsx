@@ -1,8 +1,4 @@
-import Image from "next/image";
-import { members } from "@/lib/data"; // importing data
-import MemberCard from "../ui/MemberCard";
-
-
+import MembersSection from "./MembersSection";
 
 export default function ONasSection() {
   return (
@@ -82,11 +78,7 @@ export default function ONasSection() {
           </ul>
         </div>
       </div>
-      <div className="relative max-w-5xl mx-auto space-y-16 px-4 z-10">
-        {members.map((member, i) => (
-          <MemberCard key={i} i={i} {...member}/>
-        ))}
-      </div>
+      <MembersSection />
     </section>
   );
 }
