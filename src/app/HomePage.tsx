@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import React from "react";
 import Image from "next/image";
 import Navbar from "../../components/Navbar";
-import uvodka from "../../public/uvodka.jpg";
-import heroImgMobile from "../../public/uvodka_mobil.jpeg";
+import uvodka from "../../public/gallery/IMG_8116.jpeg";
+import heroImgMobile from "../../public/gallery/IMG_8126.jpeg";
 
 import EventSection from "@/../components/sections/EventSection";
 import PosterModal from "@/../components/ui/PosterModal";
@@ -43,7 +43,7 @@ export default function HomePage({
 
   return (
     <div className="relative text-stone-300">
-      <div className="fixed sm:block inset-0 z-0">
+      <div className="fixed hidden md:block inset-0 z-0">
         <Image
           src={uvodka}
           alt="foto kapely pozadi"
