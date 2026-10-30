@@ -1,21 +1,18 @@
 import Image from "next/image";
 import type { Member } from "@/lib/data";
+import styles from "./MemberCard.module.css";
 
-interface MemberProps extends Member {
-  i: number;
-}
-
-export default function MemberCard({ i, name, role, bio, image }: MemberProps) {
+export default function MemberCard({ name, role, bio, image }: Member) {
   return (
-    <article className={`col-span-2 min-w-0 ${i === 3 ? "col-start-2" : ""}`}>
+    <article className={styles.card}>
       <div className="relative">
         <Image
           src={image}
           alt={name}
-          sizes="(min-width: 1320px) 392px, calc((100vw - 144px) / 3)"
+          sizes="(min-width: 1320px) 392px, (min-width: 768px) calc((100vw - 144px) / 3), (min-width: 440px) 320px, 82vw"
           className="block h-auto w-full rounded-sm"
         />
-        <span className="absolute bottom-0 left-0 bg-[#d90000] px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white">
+        <span className="absolute bottom-0 left-0 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white" style={{ backgroundColor: "rgba(217, 0, 0, 0.65)" }}>
           {role}
         </span>
       </div>
