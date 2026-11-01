@@ -63,5 +63,12 @@
     "title": "Rezervace",
     "date": "2027-07-17",
     "location": "Horažďovice"
+  },
+  {
+    "id": "event-3accf04f-35d0-4c3b-90af-9dee1c3d8b09",
+    "title": "Předvánoční zábava",
+    "date": "2026-12-19",
+    "location": "MC Houba Horažďovice",
+    "description": "Přijďte s náma zahájit Vánoční prázdniny do houby. Začínáme v 21:00"
   }
 ]
