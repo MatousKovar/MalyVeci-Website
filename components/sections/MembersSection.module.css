@@ -28,16 +28,50 @@
   outline-offset: 4px;
 }
 
+.controls {
+  position: absolute;
+  z-index: 2;
+  top: var(--member-image-center, 277px);
+  left: 8px;
+  right: 8px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 65%);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+.arrow:hover:not(:disabled) {
+  border-color: #d90000;
+  background: #d90000;
+}
+
+.arrow:focus-visible {
+  outline: 2px solid #d90000;
+  outline-offset: 4px;
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
 @media (min-width: 768px) {
   .members {
     padding-inline: 40px;
-  }
-
-  .track {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 48px 32px;
-    overflow: visible;
-    padding-bottom: 0;
   }
 }

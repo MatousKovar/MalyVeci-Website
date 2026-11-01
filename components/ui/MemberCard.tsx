@@ -9,7 +9,7 @@ export default function MemberCard({ name, role, bio, image }: Member) {
         <Image
           src={image}
           alt={name}
-          sizes="(min-width: 1320px) 392px, (min-width: 768px) calc((100vw - 144px) / 3), (min-width: 440px) 320px, 82vw"
+          sizes="(min-width: 768px) 360px, (min-width: 440px) 320px, 82vw"
           className="block h-auto w-full rounded-sm"
         />
         <span className="absolute bottom-0 left-0 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white" style={{ backgroundColor: "rgba(217, 0, 0, 0.65)" }}>
