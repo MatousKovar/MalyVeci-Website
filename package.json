@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "admin:secrets": "node scripts/admin-secrets.mjs",
+    "gallery:build": "node scripts/build-gallery.mjs",
     "dev": "next dev --turbopack",
     "build": "next build && node scripts/check-admin-function-bundles.mjs",
     "start": "next start",

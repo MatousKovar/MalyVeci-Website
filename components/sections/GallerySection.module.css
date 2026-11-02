@@ -1,3 +1,7 @@
+.gallery {
+  position: relative;
+}
+
 .viewport {
   position: relative;
   overflow-x: auto;
@@ -14,7 +18,100 @@
 
 .track {
   display: flex;
+  flex-flow: row nowrap;
   width: max-content;
   gap: 16px;
   padding-block: 16px;
+}
+.item {
+  min-width: 0;
+  flex: none;
+}
+
+.photo {
+  position: relative;
+  display: block;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+  cursor: pointer;
+}
+
+.photo:focus-visible {
+  outline: 2px solid #d90000;
+  outline-offset: -2px;
+}
+
+.image {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  filter: saturate(0.92);
+  transition: transform 300ms, filter 300ms;
+}
+
+.photo:hover .image {
+  transform: scale(1.04);
+  filter: saturate(1.1);
+}
+
+.controls {
+  position: absolute;
+  z-index: 2;
+  top: var(--gallery-image-center, 136px);
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 70%);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.arrow:hover:not(:disabled) {
+  background: #d90000;
+  border-color: #d90000;
+}
+
+.arrow:focus-visible {
+  outline: 2px solid #d90000;
+  outline-offset: 4px;
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (min-width: 640px) {
+  .photo {
+    height: 288px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .photo {
+    height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    transition: none;
+  }
 }

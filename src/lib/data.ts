@@ -49,25 +49,3 @@ export const members: Member [] = [
 
 
 export type { Event } from "@/lib/events";
-
-export const spotifyTracks = [
-  "https://open.spotify.com/embed/track/6wnc03soJZURZVtyAbK81X?utm_source=generator",
-  "https://open.spotify.com/embed/track/5qYKPSKeZb83S0kFskJkPJ?utm_source=generator",
-  "https://open.spotify.com/embed/track/7yy1E4CAVun8vq75NMQ6FD?utm_source=generator",
-  "https://open.spotify.com/embed/track/6WfhZNzOioBmDUq4xb5kvz?utm_source=generator",
-  "https://open.spotify.com/embed/track/3r6AJfqJ44FepL26lwLMPf?utm_source=generator",
-  "https://open.spotify.com/embed/track/2IJftBfq7pJ43tfnOR0RB3?utm_source=generator",
-  "https://open.spotify.com/embed/track/15tHagkk8z306XkyOHqiip?utm_source=generator",
-  "https://open.spotify.com/embed/track/5vfjUAhefN7IjHbTvVCT4Z?utm_source=generator",
-  "https://open.spotify.com/embed/track/273GBYX8ZWhlILVTWvQrS5?utm_source=generator",
-  "https://open.spotify.com/embed/track/3k2mJZM0fdqDmW7GUbq2zs?utm_source=generator",
-  "https://open.spotify.com/embed/track/29uKzagduhFDTWPCjqaGOg?utm_source=generator",
-  "https://open.spotify.com/embed/track/4yKFAIgwISeVWcNnatlxx3?utm_source=generator",
-  "https://open.spotify.com/embed/track/0jWgAnTrNZmOGmqgvHhZEm?utm_source=generator",
-  "https://open.spotify.com/embed/track/2SiXAy7TuUkycRVbbWDEpo?utm_source=generator",
-  "https://open.spotify.com/embed/track/0rmGAIH9LNJewFw7nKzZnc?utm_source=generator",
-  "https://open.spotify.com/embed/track/4TIJ7zSBNejpoIPaWpWRKc?utm_source=generator",
-  "https://open.spotify.com/embed/track/3SFXsFpeGmBTtQvKiwYMDA?utm_source=generator",
-  "https://open.spotify.com/embed/track/36ypxavzIpdQffwmUboUCP?utm_source=generator",
-  "https://open.spotify.com/embed/track/6K4r3XENOKeXFTKlBlAJLC?utm_source=generator",
-];

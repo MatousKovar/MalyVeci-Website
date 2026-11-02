@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import galleryPhotos from "@/content/gallery.json";
 import { validateGalleryPhotos } from "@/lib/content-validation.mjs";
 import GalleryLightbox from "@/../components/ui/GalleryLightbox";
@@ -21,8 +22,8 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
   const [message, setMessage] = useState("");
   const viewportRef = useRef<HTMLDivElement>(null);
   const manuallyScrolled = useRef(false);
-
-  // Pás zdvojíme, aby se posouval nekonečně bez švu.
+  const viewportId = useId();
+  const [canScroll, setCanScroll] = useState({ previous: false, next: false });
   const track = [...galleryImages, ...galleryImages];
 
   useEffect(() => {
@@ -35,12 +36,29 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
     let previousTime = 0;
     const duration = Math.max(galleryImages.length * 5, 20) * 1000;
 
+    function updateControls() {
+      if (!viewport) return;
+      const previous = viewport.scrollLeft > 2;
+      const next = viewport.scrollLeft < viewport.scrollWidth - viewport.clientWidth - 2;
+      setCanScroll((current) => current.previous === previous && current.next === next
+        ? current
+        : { previous, next });
+    }
+
     function measure() {
       const first = content?.children[0];
       const duplicate = content?.children[galleryImages.length];
       if (first instanceof HTMLElement && duplicate instanceof HTMLElement) {
         loopWidth = duplicate.offsetLeft - first.offsetLeft;
       }
+      const photo = first?.querySelector("[data-gallery-photo]");
+      const container = viewport?.parentElement;
+      if (photo && container) {
+        const bounds = photo.getBoundingClientRect();
+        const center = bounds.top - container.getBoundingClientRect().top + bounds.height / 2;
+        container.style.setProperty("--gallery-image-center", `${center}px`);
+      }
+      updateControls();
     }
 
     function stopAutoplay() {
@@ -71,10 +89,10 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
     }
 
     function animate(time: number) {
-      if (!viewport) return;
+      if (!viewport || manuallyScrolled.current) return;
       const elapsed = previousTime ? Math.min(time - previousTime, 64) : 0;
       previousTime = time;
-      if (loopWidth > 0 && !viewport.matches(":hover, :focus-within")) {
+      if (loopWidth > viewport.clientWidth && !viewport.parentElement?.matches(":hover, :focus-within")) {
         viewport.scrollLeft = (viewport.scrollLeft + elapsed * loopWidth / duration) % loopWidth;
       }
       frame = requestAnimationFrame(animate);
@@ -84,6 +102,7 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
     const observer = new ResizeObserver(measure);
     observer.observe(content);
     observer.observe(viewport);
+    viewport.addEventListener("scroll", updateControls, { passive: true });
     viewport.addEventListener("wheel", onWheel, { passive: false });
     viewport.addEventListener("pointerdown", stopAutoplay);
     viewport.addEventListener("keydown", onKeyDown);
@@ -95,11 +114,22 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
     return () => {
       if (frame !== undefined) cancelAnimationFrame(frame);
       observer.disconnect();
+      viewport.removeEventListener("scroll", updateControls);
       viewport.removeEventListener("wheel", onWheel);
       viewport.removeEventListener("pointerdown", stopAutoplay);
       viewport.removeEventListener("keydown", onKeyDown);
     };
   }, [galleryImages.length, openIndex, photoToDelete]);
+
+  function scrollGallery(direction: -1 | 1) {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    manuallyScrolled.current = true;
+    viewport.scrollBy({
+      left: direction * viewport.clientWidth * 0.85,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
+  }
 
   return (
     <section id="Fotogalerie" className="py-20 text-white">
@@ -120,54 +150,79 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
           Zatím tu nejsou žádné fotky.
         </p>
       ) : (
-        <div
-          ref={viewportRef}
-          role="region"
-          aria-label="Fotogalerie kapely"
-          tabIndex={0}
-          className={styles.viewport}
-          // Jemné rozplynutí na krajích pásu
-          style={{
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
-            maskImage:
-              "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
-          }}
-        >
-          <div className={styles.track}>
-            {track.map((img, i) => {
-              const index = i % galleryImages.length;
-              return (
-                <div key={`${img.id}-${i}`} className="shrink-0" aria-hidden={i >= galleryImages.length}>
-                <button
-                  type="button"
-                  aria-hidden={i >= galleryImages.length}
-                  tabIndex={i >= galleryImages.length ? -1 : 0}
-                  onClick={() => setOpenIndex(index)}
-                  className="relative h-60 shrink-0 overflow-hidden rounded-xl shadow-lg ring-1 ring-white/5 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D90000] sm:h-72 lg:h-80"
-                >
-                  <Image
-                    src={img.src}
-                    alt={`Fotka kapely ${index + 1}`}
-                    width={img.width}
-                    height={img.height}
-                    sizes="(max-width: 640px) 60vw, 40vw"
-                    className="h-full w-auto max-w-none saturate-[.92] transition duration-500 ease-out hover:scale-[1.04] hover:saturate-110"
-                  />
-                </button>
-                {isAdmin && (
-                  <button
-                    type="button"
-                    tabIndex={i >= galleryImages.length ? -1 : 0}
-                    onClick={() => { setOpenIndex(null); setPhotoToDelete(img); }}
-                    className="mt-2 block rounded-md border border-red-700 bg-stone-950 px-4 py-2 text-sm text-red-200 hover:bg-red-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-400"
-                  >
-                    Smazat fotku {index + 1}
-                  </button>
-                )}
-                </div>
-              );
-            })}
+        <div className={styles.gallery}>
+          <div
+            id={viewportId}
+            ref={viewportRef}
+            role="region"
+            aria-label="Fotogalerie kapely"
+            tabIndex={0}
+            className={styles.viewport}
+            style={{
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
+              maskImage:
+                "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
+            }}
+          >
+            <div className={styles.track} style={{ display: "flex", flexFlow: "row nowrap" }}>
+              {track.map((img, i) => {
+                const index = i % galleryImages.length;
+                const duplicate = i >= galleryImages.length;
+                return (
+                  <div key={`${img.id}-${i}`} className={styles.item} aria-hidden={duplicate}>
+                    <button
+                      type="button"
+                      data-gallery-photo
+                      tabIndex={duplicate ? -1 : 0}
+                      onClick={() => setOpenIndex(index)}
+                      className={styles.photo}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={`Fotka kapely ${index + 1}`}
+                        width={img.width}
+                        height={img.height}
+                        sizes="(max-width: 640px) 80vw, 60vw"
+                        className={styles.image}
+                      />
+                    </button>
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        tabIndex={duplicate ? -1 : 0}
+                        onClick={() => { setOpenIndex(null); setPhotoToDelete(img); }}
+                        className="mt-2 block rounded-md border border-red-700 bg-stone-950 px-4 py-2 text-sm text-red-200 hover:bg-red-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-400"
+                      >
+                        Smazat fotku {index + 1}
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div role="group" aria-label="Posun galerie" className={styles.controls}>
+            <button
+              type="button"
+              aria-label="Předchozí fotografie"
+              aria-controls={viewportId}
+              disabled={!canScroll.previous}
+              onClick={() => scrollGallery(-1)}
+              className={styles.arrow}
+            >
+              <ChevronLeft size={24} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-label="Další fotografie"
+              aria-controls={viewportId}
+              disabled={!canScroll.next}
+              onClick={() => scrollGallery(1)}
+              className={styles.arrow}
+            >
+              <ChevronRight size={24} aria-hidden="true" />
+            </button>
           </div>
         </div>
       )}

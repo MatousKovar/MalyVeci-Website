@@ -1,6 +1,3 @@
-import { spotifyTracks } from "@/lib/data";
-import SongIframe from "../ui/SongIframe";
-
 export default function RepertoarSection() {
   return (
     <section
@@ -25,17 +22,6 @@ export default function RepertoarSection() {
           kontaktujte.
         </a>
       </p>
-      <div className="w-full max-w-6xl overflow-x-hidden mt-15">
-        {/* Scrolling wrapper */}
-        <div className="flex animate-scroll space-x-4 w-max">
-          {spotifyTracks.map((track, index) => (
-            <SongIframe
-              key={index} // React vyžaduje unikátní klíč
-              src={track} // Předání URL do komponenty
-            />
-          ))}
-        </div>
-      </div>
     </section>
   );
 }

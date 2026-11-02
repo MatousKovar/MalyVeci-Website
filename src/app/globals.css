@@ -97,16 +97,6 @@ html{
 @font-face {font-family: "ArchivoBlack";
   src: url("/fonts/ArchivoBlack.tff") format("truetype");}
 
-  @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  .animate-scroll {
-    display: flex;
-    animation: scroll 30s linear infinite;
-  }
-
 @keyframes gradient {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }

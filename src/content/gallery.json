@@ -1,24 +1,24 @@
 [
   {
     "id": "gallery-photo-001",
-    "src": "/gallery/_DSC7878.jpg",
+    "src": "/gallery/_DSC7878 Large.jpeg",
     "order": 0,
-    "width": 6000,
-    "height": 4000
+    "width": 1280,
+    "height": 853
   },
   {
     "id": "gallery-photo-002",
-    "src": "/gallery/_DSC7914.jpg",
+    "src": "/gallery/_DSC7914 Large.jpeg",
     "order": 1,
-    "width": 6000,
-    "height": 4000
+    "width": 1280,
+    "height": 853
   },
   {
     "id": "gallery-photo-003",
-    "src": "/gallery/_DSC7954.jpg",
+    "src": "/gallery/_DSC7954 Large.jpeg",
     "order": 2,
-    "width": 4000,
-    "height": 6000
+    "width": 853,
+    "height": 1280
   },
   {
     "id": "gallery-photo-004",
@@ -77,185 +77,213 @@
     "height": 1350
   },
   {
-    "id": "gallery-photo-016",
-    "src": "/gallery/9.PNG",
-    "order": 11,
-    "width": 1080,
-    "height": 1350
-  },
-  {
     "id": "gallery-photo-017",
     "src": "/gallery/11.jpg",
-    "order": 12,
+    "order": 11,
     "width": 4892,
     "height": 6115
   },
   {
     "id": "gallery-photo-018",
     "src": "/gallery/11.PNG",
-    "order": 13,
+    "order": 12,
     "width": 1080,
     "height": 1350
   },
   {
     "id": "gallery-photo-019",
     "src": "/gallery/12.jpg",
-    "order": 14,
+    "order": 13,
     "width": 7360,
     "height": 4912
   },
   {
-    "id": "gallery-photo-020",
-    "src": "/gallery/12.PNG",
-    "order": 15,
-    "width": 1080,
-    "height": 1350
-  },
-  {
     "id": "gallery-photo-021",
     "src": "/gallery/13.jpg",
-    "order": 16,
+    "order": 14,
     "width": 1536,
     "height": 2048
   },
   {
     "id": "gallery-photo-022",
     "src": "/gallery/14.jpeg",
-    "order": 17,
+    "order": 15,
     "width": 1536,
     "height": 2048
   },
   {
     "id": "gallery-photo-023",
     "src": "/gallery/28e8d434efa8958bd82bce69dd325f63.jpeg",
-    "order": 18,
+    "order": 16,
     "width": 1152,
     "height": 2048
   },
   {
-    "id": "gallery-photo-027",
-    "src": "/gallery/IMG_0556.jpeg",
-    "order": 19,
-    "width": 2417,
-    "height": 3021
-  },
-  {
     "id": "gallery-photo-028",
     "src": "/gallery/IMG_1879.JPG",
-    "order": 20,
+    "order": 17,
     "width": 3222,
     "height": 4833
   },
   {
     "id": "gallery-photo-029",
     "src": "/gallery/IMG_1882.JPG",
-    "order": 21,
+    "order": 18,
     "width": 3251,
     "height": 4876
   },
   {
     "id": "gallery-photo-030",
     "src": "/gallery/IMG_1883.JPG",
-    "order": 22,
+    "order": 19,
     "width": 3251,
     "height": 4876
   },
   {
     "id": "gallery-photo-031",
     "src": "/gallery/IMG_1886.JPG",
-    "order": 23,
+    "order": 20,
     "width": 3638,
     "height": 5457
   },
   {
     "id": "gallery-photo-032",
     "src": "/gallery/IMG_1888.JPG",
-    "order": 24,
+    "order": 21,
     "width": 6048,
     "height": 4032
   },
   {
     "id": "gallery-photo-033",
     "src": "/gallery/IMG_1892.JPG",
-    "order": 25,
+    "order": 22,
     "width": 3829,
     "height": 5743
   },
   {
     "id": "gallery-photo-035",
     "src": "/gallery/IMG_5344.jpeg",
-    "order": 26,
+    "order": 23,
     "width": 3024,
     "height": 4032
   },
   {
     "id": "gallery-photo-036",
     "src": "/gallery/roubalka_deti.jpg",
-    "order": 27,
+    "order": 24,
     "width": 1542,
     "height": 2048
   },
   {
     "id": "gallery-photo-037",
     "src": "/gallery/IMG_8110.jpeg",
-    "order": 28,
+    "order": 25,
     "width": 3600,
     "height": 2400
   },
   {
     "id": "gallery-photo-038",
     "src": "/gallery/IMG_8113.jpeg",
-    "order": 29,
+    "order": 26,
     "width": 2400,
     "height": 3600
   },
   {
     "id": "gallery-photo-039",
     "src": "/gallery/IMG_8114.jpeg",
-    "order": 30,
+    "order": 27,
     "width": 2400,
     "height": 3600
   },
   {
     "id": "gallery-photo-040",
     "src": "/gallery/IMG_8115.jpeg",
-    "order": 31,
+    "order": 28,
     "width": 3600,
     "height": 2400
   },
   {
     "id": "gallery-photo-041",
     "src": "/gallery/IMG_8116.jpeg",
-    "order": 32,
+    "order": 29,
     "width": 3600,
     "height": 2400
   },
   {
     "id": "gallery-photo-042",
     "src": "/gallery/IMG_8117.jpeg",
-    "order": 33,
+    "order": 30,
     "width": 3600,
     "height": 2400
   },
   {
     "id": "gallery-photo-043",
     "src": "/gallery/IMG_8118.jpeg",
-    "order": 34,
+    "order": 31,
     "width": 3600,
     "height": 2400
   },
   {
     "id": "gallery-photo-044",
     "src": "/gallery/IMG_8119.jpeg",
-    "order": 35,
+    "order": 32,
     "width": 2400,
     "height": 3600
   },
   {
     "id": "gallery-photo-045",
     "src": "/gallery/IMG_8126.jpeg",
-    "order": 36,
+    "order": 33,
     "width": 2400,
     "height": 3600
+  },
+  {
+    "id": "gallery-photo-046",
+    "src": "/gallery/_LK_9502 Large.jpeg",
+    "order": 34,
+    "width": 853,
+    "height": 1280
+  },
+  {
+    "id": "gallery-photo-047",
+    "src": "/gallery/_LK_9580 Large.jpeg",
+    "order": 35,
+    "width": 853,
+    "height": 1280
+  },
+  {
+    "id": "gallery-photo-048",
+    "src": "/gallery/_LK_9625 Large 2.jpeg",
+    "order": 36,
+    "width": 1280,
+    "height": 853
+  },
+  {
+    "id": "gallery-photo-049",
+    "src": "/gallery/_LK_9837 Large.jpeg",
+    "order": 37,
+    "width": 853,
+    "height": 1280
+  },
+  {
+    "id": "gallery-photo-050",
+    "src": "/gallery/_LK_9846.jpg",
+    "order": 38,
+    "width": 3936,
+    "height": 2624
+  },
+  {
+    "id": "gallery-photo-051",
+    "src": "/gallery/_LK_9955.jpg",
+    "order": 39,
+    "width": 2624,
+    "height": 3936
+  },
+  {
+    "id": "gallery-photo-052",
+    "src": "/gallery/uvodka.jpg",
+    "order": 40,
+    "width": 3600,
+    "height": 2400
   }
 ]

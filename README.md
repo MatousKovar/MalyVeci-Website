@@ -42,6 +42,8 @@ The app stores only a scrypt password hash. After a successful login, it signs a
 
 Přihlášený správce může na hlavní stránce smazat jednotlivou fotku galerie. Smazání vyžaduje potvrzení s náhledem. Odstraní se záznam z `gallery.json`; obrázkový soubor zůstane zachovaný, pokud na něj odkazuje jiná fotka nebo další obsah webu. V produkci se změna uloží jedním commitem přes GitHub API a veřejný web ji zobrazí po dokončení nasazení. Na preview nasazeních je mazání zakázané.
 
+Po ruční změně fotek v `public/gallery` spusťte `npm run gallery:build`. Příkaz obnoví `src/content/gallery.json`, načte rozměry fotek a zachová pořadí i ID stávajících záznamů. Nové fotky přidá na konec, chybějící soubory vyřadí a přesné kopie stejného obrázku zahrne jen jednou. Obrázkové soubory nemění.
+
 Přihlášený správce může v sekci videí přidat jedno krátké video tlačítkem „Přidat video“. Formulář přijímá YouTube odkazy ve tvaru `watch`, `shorts`, `embed`, `v`, zkrácené odkazy `youtu.be` a samotné 11znakové ID. Nové video dostane poslední pořadí. Neplatný odkaz nebo již uložené video server odmítne a formulář zachová zadanou hodnotu. V produkci se změna uloží commitem přes GitHub API a video se zobrazí po dokončení nasazení. Na preview nasazeních je přidávání zakázané.
 
 Přihlášený správce může u každého krátkého videa otevřít potvrzení s náhledem a odkazem na YouTube. Smazání odebere pouze vybraný záznam ze `shorts.json` a zachová pořadí ostatních videí. Na YouTube video zůstane. V produkci se změna uloží přes GitHub API a veřejný web ji zobrazí po nasazení. Na preview nasazeních je mazání zakázané.
