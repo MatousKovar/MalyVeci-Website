@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Produkční API ukládá média přes GitHub; public obsluhuje Vercel jako statické soubory.
+  // Média obsluhuje Vercel staticky; produkční změny souborů probíhají přes GitHub.
   outputFileTracingExcludes: {
+    "/": ["./public/**/*"],
+    "/admin": ["./public/**/*"],
     "/api/admin/*": ["./public/**/*"],
     "/api/cron/*": ["./public/**/*"],
   },

@@ -164,3 +164,23 @@ test("the checked-in content files satisfy their validated formats", () => {
     !event.posterPath || existsSync(new URL(`../public${event.posterPath}`, import.meta.url)),
   ));
 });
+
+
+test("Vercel keeps poster URLs when static files are outside the function bundle", (context) => {
+  const previous = process.env.VERCEL;
+  process.env.VERCEL = "1";
+  context.after(() => {
+    if (previous === undefined) delete process.env.VERCEL;
+    else process.env.VERCEL = previous;
+  });
+  const event = {
+    id: "event-static-poster",
+    title: "Koncert",
+    date: "2026-12-12",
+    location: "Strakonice",
+    posterPath: "/posters/outside-function.jpg",
+  };
+  const result = readEventContent([event]);
+  assert.deepEqual(result.events, [event]);
+  assert.deepEqual(result.errors, []);
+});

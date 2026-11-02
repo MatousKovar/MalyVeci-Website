@@ -8,7 +8,7 @@ import { validateEvents } from "./content-validation.mjs";
  * @param {{ checkPosterFiles?: boolean }} [options]
  * @returns {{ events: import("./content-types").EventContent[], errors: string[] }}
  */
-export function readEventContent(source = eventContent, { checkPosterFiles = true } = {}) {
+export function readEventContent(source = eventContent, { checkPosterFiles = process.env.VERCEL !== "1" } = {}) {
   const { items, errors } = validateEvents(source);
   const events = items.map((event) => {
     if (
