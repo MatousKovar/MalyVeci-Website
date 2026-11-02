@@ -285,5 +285,12 @@
     "order": 40,
     "width": 3600,
     "height": 2400
+  },
+  {
+    "id": "gallery-photo-053",
+    "src": "/gallery/_LK_9660 Large.jpeg",
+    "order": 41,
+    "width": 853,
+    "height": 1280
   }
 ]

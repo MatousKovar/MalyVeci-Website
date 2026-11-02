@@ -12,7 +12,7 @@ import styles from "./GallerySection.module.css";
 
 const galleryContent = validateGalleryPhotos(galleryPhotos);
 const initialGalleryImages = [...galleryContent.items].sort(
-  (first, second) => first.order - second.order,
+  (first, second) => second.order - first.order,
 );
 
 export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean }) {

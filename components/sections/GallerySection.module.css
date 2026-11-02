@@ -31,7 +31,7 @@
 .photo {
   position: relative;
   display: block;
-  height: 240px;
+  height: 320px;
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
@@ -60,7 +60,7 @@
 .controls {
   position: absolute;
   z-index: 2;
-  top: var(--gallery-image-center, 136px);
+  top: var(--gallery-image-center, 176px);
   left: 12px;
   right: 12px;
   display: flex;
@@ -100,13 +100,13 @@
 
 @media (min-width: 640px) {
   .photo {
-    height: 288px;
+    height: 400px;
   }
 }
 
 @media (min-width: 1024px) {
   .photo {
-    height: 320px;
+    height: 480px;
   }
 }
 
