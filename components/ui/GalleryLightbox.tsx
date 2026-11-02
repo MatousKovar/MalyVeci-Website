@@ -69,7 +69,7 @@ export default function GalleryLightbox({ images, index, onClose, onNavigate }: 
           </button>
 
           {/* Počítadlo */}
-          <div className="absolute top-6 left-1/2 -translate-x-1/2 font-orbitron text-sm tracking-widest text-white/80">
+          <div className="absolute top-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/50 px-3 py-2 font-orbitron text-sm tracking-widest text-white/80">
             {index + 1} / {images.length}
           </div>
 
@@ -88,16 +88,20 @@ export default function GalleryLightbox({ images, index, onClose, onNavigate }: 
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.25 }}
-            className="relative flex max-h-[88vh] max-w-[92vw] items-center justify-center"
+            className="relative"
+            style={{
+              width: `min(calc(100vw - 16px), calc((100dvh - 16px) * ${current.width / current.height}))`,
+              aspectRatio: `${current.width} / ${current.height}`,
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <Image
               src={current.src}
               alt={`Fotka kapely ${index + 1}`}
-              width={current.width}
-              height={current.height}
-              className="max-h-[88vh] w-auto rounded-lg object-contain shadow-2xl"
-              sizes="92vw"
+              fill
+              style={{ objectFit: "contain" }}
+              sizes="100vw"
+              quality={90}
               priority
             />
           </motion.div>
