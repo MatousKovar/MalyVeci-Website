@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import galleryPhotos from "@/content/gallery.json";
 import { validateGalleryPhotos } from "@/lib/content-validation.mjs";
 import GalleryLightbox from "@/../components/ui/GalleryLightbox";
 import GalleryPhotoDelete from "@/app/admin/GalleryPhotoDelete";
 import type { GalleryPhotoContent } from "@/lib/content-types";
+import styles from "./GallerySection.module.css";
 
 const galleryContent = validateGalleryPhotos(galleryPhotos);
 const initialGalleryImages = [...galleryContent.items].sort(
@@ -18,11 +19,87 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
   const [galleryImages, setGalleryImages] = useState(initialGalleryImages);
   const [photoToDelete, setPhotoToDelete] = useState<GalleryPhotoContent | null>(null);
   const [message, setMessage] = useState("");
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const manuallyScrolled = useRef(false);
 
   // Pás zdvojíme, aby se posouval nekonečně bez švu.
   const track = [...galleryImages, ...galleryImages];
-  // Rychlost podle počtu fotek (delší pás = pomalejší, ať to není zběsilé).
-  const duration = `${Math.max(galleryImages.length * 5, 20)}s`;
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const content = viewport?.firstElementChild;
+    if (!viewport || !(content instanceof HTMLElement)) return;
+
+    let frame: number | undefined;
+    let loopWidth = 0;
+    let previousTime = 0;
+    const duration = Math.max(galleryImages.length * 5, 20) * 1000;
+
+    function measure() {
+      const first = content?.children[0];
+      const duplicate = content?.children[galleryImages.length];
+      if (first instanceof HTMLElement && duplicate instanceof HTMLElement) {
+        loopWidth = duplicate.offsetLeft - first.offsetLeft;
+      }
+    }
+
+    function stopAutoplay() {
+      manuallyScrolled.current = true;
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    }
+
+    function onWheel(event: WheelEvent) {
+      if (event.ctrlKey || !viewport) return;
+      stopAutoplay();
+      if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+
+      const unit = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16
+        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? viewport.clientWidth : 1;
+      const delta = event.deltaY * unit;
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+      if ((delta > 0 && viewport.scrollLeft < maxScroll - 1) ||
+          (delta < 0 && viewport.scrollLeft > 1)) {
+        event.preventDefault();
+        viewport.scrollLeft += delta;
+      }
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (["ArrowLeft", "ArrowRight", "Home", "End", "PageUp", "PageDown", " "].includes(event.key)) {
+        stopAutoplay();
+      }
+    }
+
+    function animate(time: number) {
+      if (!viewport) return;
+      const elapsed = previousTime ? Math.min(time - previousTime, 64) : 0;
+      previousTime = time;
+      if (loopWidth > 0 && !viewport.matches(":hover, :focus-within")) {
+        viewport.scrollLeft = (viewport.scrollLeft + elapsed * loopWidth / duration) % loopWidth;
+      }
+      frame = requestAnimationFrame(animate);
+    }
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(content);
+    observer.observe(viewport);
+    viewport.addEventListener("wheel", onWheel, { passive: false });
+    viewport.addEventListener("pointerdown", stopAutoplay);
+    viewport.addEventListener("keydown", onKeyDown);
+    if (!manuallyScrolled.current && openIndex === null && photoToDelete === null &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      frame = requestAnimationFrame(animate);
+    }
+
+    return () => {
+      if (frame !== undefined) cancelAnimationFrame(frame);
+      observer.disconnect();
+      viewport.removeEventListener("wheel", onWheel);
+      viewport.removeEventListener("pointerdown", stopAutoplay);
+      viewport.removeEventListener("keydown", onKeyDown);
+    };
+  }, [galleryImages.length, openIndex, photoToDelete]);
 
   return (
     <section id="Fotogalerie" className="py-20 text-white">
@@ -44,7 +121,11 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
         </p>
       ) : (
         <div
-          className="group relative overflow-hidden"
+          ref={viewportRef}
+          role="region"
+          aria-label="Fotogalerie kapely"
+          tabIndex={0}
+          className={styles.viewport}
           // Jemné rozplynutí na krajích pásu
           style={{
             WebkitMaskImage:
@@ -53,10 +134,7 @@ export default function GallerySection({ isAdmin = false }: { isAdmin?: boolean 
               "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
           }}
         >
-          <div
-            className="flex w-max gap-4 py-4 animate-scroll hover:[animation-play-state:paused]"
-            style={{ animationDuration: duration }}
-          >
+          <div className={styles.track}>
             {track.map((img, i) => {
               const index = i % galleryImages.length;
               return (
