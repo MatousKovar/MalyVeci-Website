@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { ArrowUpRight, Menu, X } from "lucide-react";
+import SocialLinks from "./ui/SocialLinks";
+import styles from "./Navbar.module.css";
 
 const desktopLinks = ["O nás", "Akce", "Fotogalerie", "Videa", "Kontakty", "Repertoár"];
 const mobileLinks = ["Akce", "O nás", "Fotogalerie", "Videa", "Repertoár", "Kontakty"];
@@ -98,9 +100,6 @@ export default function Navbar() {
                 </a>
               ))}
             </div>
-            <a href="/admin" className="ml-auto hidden shrink-0 items-center whitespace-nowrap rounded-md border border-stone-500/70 px-3 py-2 text-sm font-medium tracking-wide text-stone-300 transition-colors hover:border-[#D90000] hover:text-[#D90000] sm:inline-flex">
-              Správa webu
-            </a>
             <div className="flex w-full items-center justify-between gap-4 sm:hidden">
               <div className="flex items-center gap-2">
                 <Image src="/mvmaly.png" alt="" width={32} height={32} className="object-contain" />
@@ -111,6 +110,9 @@ export default function Navbar() {
               </button>
             </div>
           </div>
+        </div>
+        <div className={styles.socials}>
+          <SocialLinks compact />
         </div>
       </nav>
       {mobileOpen && createPortal(
@@ -150,8 +152,8 @@ export default function Navbar() {
                 <a href="#Kontakty" onClick={selectSection} className="flex min-h-13 items-center justify-between gap-3 rounded-lg bg-[#D90000] px-4 py-3 font-medium text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-500">
                   Chci vás na akci <ArrowUpRight size={20} aria-hidden="true" className="shrink-0" />
                 </a>
-                <div className="flex flex-wrap items-center justify-between gap-x-3 pt-2 text-xs text-stone-400">
-                  <a href="/admin" className="inline-flex min-h-11 items-center text-stone-300 underline underline-offset-4 hover:text-white">Správa webu</a>
+                <div className="flex justify-center pt-4">
+                  <SocialLinks compact />
                 </div>
               </div>
             </div>

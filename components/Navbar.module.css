@@ -1,0 +1,14 @@
+.socials {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 639px) {
+  .socials {
+    display: none;
+  }
+}

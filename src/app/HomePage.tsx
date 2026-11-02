@@ -81,11 +81,14 @@ export default function HomePage({
         <RepertoarSection />
         <ContactsSection />
 
-        <section id="Rights" className="relative text-center text-stone-300">
+        <footer id="Rights" className="relative px-4 pb-8 text-center text-stone-300">
           <p className="text-[#D90000] text-sm">
             © {new Date().getFullYear()} Matouš Kovář. Všechna práva vyhrazena.
           </p>
-        </section>
+          <a href="/admin" className="mx-auto mt-6 inline-flex min-h-11 items-center justify-center rounded-md border border-stone-500/70 px-4 py-2 text-sm text-stone-300 transition-colors hover:border-[#D90000] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-500">
+            Správa webu
+          </a>
+        </footer>
       </main>
 
       <PosterModal posterSrc={poster} onClose={() => setPoster(null)} />
