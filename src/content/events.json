@@ -70,8 +70,8 @@
     "title": "Vánoce v Houbě",
     "date": "2026-12-19",
     "location": "MC Houba, Horažďovice",
-    "posterPath": "/posters/e5b1de7f-cd36-46d1-a705-e7a7e74d79b5.png",
-    "description": "Přijďte s námi zahájit vánoční prázdniny do Houby. \r\nZačínáme ve 20:00"
+    "description": "Přijďte s námi zahájit vánoční prázdniny do Houby. \r\nZačínáme ve 20:00",
+    "posterPath": "/posters/e5b1de7f-cd36-46d1-a705-e7a7e74d79b5.png"
   },
   {
     "id": "event-6d835b55-a101-4a08-bc4c-32d43bf564d8",
@@ -82,7 +82,7 @@
   },
   {
     "id": "event-150e616e-fd96-4d2b-b142-975e26082065",
-    "title": "Školní ples",
+    "title": "Školní zábava",
     "date": "2027-04-17",
     "location": "Záboří",
     "description": "Detaily brzy..."
