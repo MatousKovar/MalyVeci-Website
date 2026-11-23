@@ -84,5 +84,11 @@
     "date": "2027-04-17",
     "location": "Záboří",
     "description": "Detaily brzy..."
+  },
+  {
+    "id": "event-d33d8204-f226-4c03-a71d-eb07c31c4451",
+    "title": "Předběžná rezervace",
+    "date": "2027-06-12",
+    "location": "Sušice"
   }
 ]
