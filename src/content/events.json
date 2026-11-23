@@ -45,15 +45,16 @@
     "id": "event-2027-01-29-maturitni-ples",
     "title": "Maturitní ples Oktáva Gymstr",
     "date": "2027-01-29",
-    "location": "Strakonice"
+    "location": "Strakonice",
+    "description": "Maturitní ples Oktávy Gymnázia Strakonice\r\nMísto: DK Strakonice\r\nOtevření sálu: 19:00"
   },
   {
     "id": "event-2027-02-20-maturitni-ples",
     "title": "Maturitní ples 4.A Gymstr",
     "date": "2027-02-20",
     "location": "Strakonice",
-    "posterPath": "/posters/0faf251b-1627-4d0b-8085-98aac4eeb999.jpg",
-    "description": "Maturitní ples třídy 4.A Gymnázia Strakonice\r\nDK Strakonice, otevření sálu v 19:00"
+    "description": "Maturitní ples třídy 4.A Gymnázia Strakonice\r\nDK Strakonice, otevření sálu v 19:00",
+    "posterPath": "/posters/0faf251b-1627-4d0b-8085-98aac4eeb999.jpg"
   },
   {
     "id": "event-2027-07-24-poutova-zabava",
